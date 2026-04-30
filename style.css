@@ -1,14 +1,4 @@
-body {
-  font-family: sans-serif;
-  background: #F5E6D3;
-  color: #4A3F35;
-}
-
 .menu-item {
-  background: white;
-  padding: 10px;
-  margin: 10px;
-  border-radius: 10px;
   transition: 0.3s;
 }
 
@@ -16,17 +6,3 @@ body {
   background: #fff3e0;
   transform: scale(1.02);
 }
-
-.bottom-bar {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  display: flex;
-}
-
-.bottom-bar button {
-  flex: 1;
-  padding: 15px;
-}
-
-.hidden { display: none; }

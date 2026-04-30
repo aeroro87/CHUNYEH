@@ -1,31 +1,168 @@
+<!-- index.html -->
 <!DOCTYPE html>
-<html>
+<html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <title>點餐系統</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>飲料點餐</title>
   <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<h1>飲品菜單</h1>
+<header>
+  <h1>飲品點餐</h1>
+</header>
 
-<div id="menu"></div>
+<main>
+  <div id="menu"></div>
+</main>
 
 <!-- 購物車 -->
-<div id="cart">
+<div id="cartPanel" class="hidden">
   <h2>購物車</h2>
   <div id="cartItems"></div>
+  <label>自取時間：</label>
   <input type="datetime-local" id="pickupTime">
   <button onclick="submitOrder()">送出訂單</button>
 </div>
 
-<!-- 底部 -->
+<!-- 訂單查詢 -->
+<div id="orderPanel" class="hidden">
+  <h2>訂單查詢</h2>
+  <input id="orderIdInput" placeholder="輸入訂單編號">
+  <button onclick="checkOrder()">查詢</button>
+  <div id="orderStatus"></div>
+</div>
+
+<!-- 底部按鈕 -->
 <div class="bottom-bar">
   <button onclick="toggleCart()">購物車</button>
-  <button onclick="checkOrder()">訂單查詢</button>
+  <button onclick="toggleOrder()">訂單查詢</button>
 </div>
 
 <script src="app.js"></script>
 </body>
 </html>
+
+
+/* style.css */
+body {
+  font-family: sans-serif;
+  background: #F5E6D3;
+  color: #4A3F35;
+}
+
+.menu-item {
+  background: white;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 10px;
+  transition: 0.3s;
+}
+
+.menu-item:hover {
+  background: #fff3e0;
+  transform: scale(1.02);
+}
+
+.bottom-bar {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+}
+
+.bottom-bar button {
+  flex: 1;
+  padding: 15px;
+}
+
+.hidden { display: none; }
+
+
+// app.js
+const menu = [
+  { name: "珍珠奶茶", price: 50, milk: true },
+  { name: "紅茶", price: 30, milk: false }
+];
+
+let cart = [];
+
+function renderMenu() {
+  const el = document.getElementById("menu");
+  el.innerHTML = "";
+
+  menu.forEach(item => {
+    const div = document.createElement("div");
+    div.className = "menu-item";
+    div.innerHTML = `
+      <h3>${item.name} - $${item.price}</h3>
+      <button onclick="selectItem('${item.name}')">選擇</button>
+    `;
+    el.appendChild(div);
+  });
+}
+
+function selectItem(name) {
+  const item = menu.find(m => m.name === name);
+
+  let milkExtra = false;
+  if (item.milk) {
+    milkExtra = confirm("是否加牛奶+5？");
+  }
+
+  cart.push({ name, price: item.price, milkExtra, qty: 1 });
+  renderCart();
+}
+
+function renderCart() {
+  const el = document.getElementById("cartItems");
+  el.innerHTML = cart.map(i => `${i.name} x${i.qty}`).join("<br>");
+}
+
+function calculateTotal() {
+  return cart.reduce((sum, i) => {
+    let p = i.price;
+    if (i.milkExtra) p += 5;
+    return sum + p * i.qty;
+  }, 0);
+}
+
+function generateOrderId() {
+  const d = new Date();
+  return d.getFullYear() + "" + (d.getMonth()+1) + "" + d.getDate() + "-" + Math.floor(Math.random()*1000);
+}
+
+function submitOrder() {
+  const orderId = generateOrderId();
+  const total = calculateTotal();
+
+  fetch("YOUR_GAS_API", {
+    method: "POST",
+    body: JSON.stringify({
+      orderId,
+      items: cart,
+      total,
+      time: document.getElementById("pickupTime").value
+    })
+  });
+
+  alert("訂單送出！編號：" + orderId);
+  cart = [];
+  renderCart();
+}
+
+function toggleCart() {
+  document.getElementById("cartPanel").classList.toggle("hidden");
+}
+
+function toggleOrder() {
+  document.getElementById("orderPanel").classList.toggle("hidden");
+}
+
+function checkOrder() {
+  const id = document.getElementById("orderIdInput").value;
+  document.getElementById("orderStatus").innerText = "查詢功能需接 Firebase";
+}
+
+renderMenu();

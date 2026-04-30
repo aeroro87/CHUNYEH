@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>點餐系統</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<h1>飲品菜單</h1>
+
+<div id="menu"></div>
+
+<!-- 購物車 -->
+<div id="cart">
+  <h2>購物車</h2>
+  <div id="cartItems"></div>
+  <input type="datetime-local" id="pickupTime">
+  <button onclick="submitOrder()">送出訂單</button>
+</div>
+
+<!-- 底部 -->
+<div class="bottom-bar">
+  <button onclick="toggleCart()">購物車</button>
+  <button onclick="checkOrder()">訂單查詢</button>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

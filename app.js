@@ -1,46 +1,104 @@
 const menu = [
-  { name: "珍珠奶茶", price: 50, hasMilk: true },
-  { name: "紅茶", price: 30, hasMilk: false }
+  { id:1, name:"蓮藕茶", price:40 },
+  { id:2, name:"洛神花茶", price:40 },
+  { id:3, name:"紅茶", price:30 }
 ];
 
 let cart = [];
+let currentItem = null;
 
-function renderMenu() {
-  const container = document.getElementById("menu");
+function renderMenu(){
+  const el = document.getElementById("menu");
+  el.innerHTML="";
 
-  menu.forEach(item => {
-    const div = document.createElement("div");
-    div.innerHTML = `
-      <h3>${item.name}</h3>
-      <button onclick="addItem('${item.name}')">加入</button>
+  menu.forEach(item=>{
+    const div=document.createElement("div");
+    div.className="menu-item";
+    div.innerHTML=`
+      <h3>${item.name} - $${item.price}</h3>
+      <button onclick="openModal(${item.id})">選擇</button>
     `;
-    container.appendChild(div);
+    el.appendChild(div);
   });
 }
 
-function addItem(name) {
-  cart.push({ name, qty: 1 });
+function openModal(id){
+  currentItem = menu.find(m=>m.id===id);
+  document.getElementById("modalTitle").innerText=currentItem.name;
+  document.getElementById("customModal").classList.remove("hidden");
+}
+
+function closeModal(){
+  document.getElementById("customModal").classList.add("hidden");
+}
+
+function addToCart(){
+  const ice = document.getElementById("ice").value;
+  if(!ice){ alert("請選擇冰塊"); return; }
+
+  const container = document.getElementById("container").value;
+  const qty = parseInt(document.getElementById("qty").value);
+
+  cart.push({
+    name: currentItem.name,
+    price: currentItem.price,
+    ice,
+    container,
+    qty
+  });
+
+  closeModal();
   renderCart();
 }
 
-function renderCart() {
-  document.getElementById("cartItems").innerHTML =
-    cart.map(i => `${i.name} x${i.qty}`).join("<br>");
+function renderCart(){
+  const el = document.getElementById("cartItems");
+  el.innerHTML = cart.map(i=>`${i.name} (${i.container}/${i.ice}) x${i.qty}`).join("<br>");
+  document.getElementById("total").innerText = calculateTotal();
 }
 
-function submitOrder() {
-  const total = calculateTotal(cart);
+function calculateTotal(){
+  return cart.reduce((sum,i)=>sum+i.price*i.qty,0);
+}
 
-  fetch("https://script.google.com/macros/s/AKfycbw7CvH7y0gRgRSH6lide79FG1OSCRtYf9JK_nKWNG9AmH7bHYN_YERTtFQLOhBqtyDbGQ/exec", {
-    method: "POST",
-    body: JSON.stringify({
-      items: cart,
-      total: total,
-      time: document.getElementById("pickupTime").value
-    })
+function generateOrderId(){
+  const d=new Date();
+  return d.getFullYear()+""+(d.getMonth()+1)+d.getDate()+"-"+Math.floor(Math.random()*1000);
+}
+
+function submitOrder(){
+  const orderId=generateOrderId();
+
+  const data={
+    orderId,
+    cart,
+    total:calculateTotal(),
+    name:document.getElementById("name").value,
+    phone:document.getElementById("phone").value,
+    time:document.getElementById("pickupTime").value,
+    status:"pending"
+  };
+
+  fetch("YOUR_GAS_API",{
+    method:"POST",
+    body:JSON.stringify(data)
   });
 
-  alert("訂單已送出！");
+  alert("訂單成立："+orderId);
+  cart=[];
+  renderCart();
+}
+
+function toggleCart(){
+  document.getElementById("cartPanel").classList.toggle("hidden");
+}
+
+function toggleOrder(){
+  document.getElementById("orderPanel").classList.toggle("hidden");
+}
+
+function checkOrder(){
+  document.getElementById("orderStatus").innerText="需接Firebase";
 }
 
 renderMenu();

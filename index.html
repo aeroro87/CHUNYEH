@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>點餐系統</title>
 
 <style>
@@ -26,9 +27,9 @@ body {
 
 .card {
   background: white;
-  padding: 10px;
-  margin-bottom: 10px;
-  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 15px;
+  border-radius: 16px;
   cursor: pointer;
   transition: 0.2s;
 }
@@ -38,9 +39,10 @@ body {
 }
 
 .btn {
-  padding: 10px;
+  padding: 14px;
   border: none;
-  border-radius: 8px;
+  font-size: 16px;
+  border-radius: 12px;
   background: #E6A96B;
   color: white;
   width: 100%;
@@ -77,7 +79,36 @@ body {
   margin: 20% auto;
   padding: 20px;
   width: 90%;
+  border-radius: 12px;
+}
+
+/* 按鈕選擇 */
+.option-group {
+  display: flex;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.option {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.option.active {
+  background: #E6A96B;
+  color: white;
+  border: none;
+}
+
+.checkout-box {
+  background: white;
+  padding: 10px;
   border-radius: 10px;
+  margin-top: 10px;
 }
 </style>
 
@@ -97,45 +128,44 @@ body {
 
 <!-- 菜單 -->
 <div id="menu" style="display:none">
-  <div class="card" onclick="openModal('紅茶',30,true)">紅茶 $30</div>
+  <div class="card" onclick="openModal('紅茶',30,false)">紅茶 $30</div>
   <div class="card" onclick="openModal('綠茶',30,false)">綠茶 $30</div>
   <div class="card" onclick="openModal('奶茶',40,true)">奶茶 $40</div>
 </div>
 
-<!-- 購物車 -->
-<div id="cart"></div>
+<!-- 結帳區 -->
+<div id="checkoutArea"></div>
 
 </div>
 
 <!-- Modal -->
 <div id="modal" class="modal">
   <div class="modal-content">
+
     <h3 id="itemName"></h3>
 
-    杯型：
-    <select id="type">
-      <option value="杯">杯裝</option>
-      <option value="瓶">瓶裝</option>
-    </select>
-
-    冰塊：
-    <select id="ice">
-      <option value="">請選擇</option>
-      <option value="正常冰">正常冰</option>
-      <option value="去冰">去冰</option>
-    </select>
-
-    <div id="milkOption" style="display:none">
-      鮮奶+5：
-      <input type="checkbox" id="milk">
+    <div>杯型</div>
+    <div class="option-group">
+      <div class="option" onclick="selectOption('type','杯',this)">杯裝</div>
+      <div class="option" onclick="selectOption('type','瓶',this)">瓶裝</div>
     </div>
 
-    <button class="btn" onclick="addToCart()">加入購物車</button>
+    <div>冰塊</div>
+    <div class="option-group">
+      <div class="option" onclick="selectOption('ice','正常冰',this)">正常冰</div>
+      <div class="option" onclick="selectOption('ice','去冰',this)">去冰</div>
+    </div>
+
+    <div id="milkOption" style="display:none">
+      <label><input type="checkbox" id="milk"> 鮮奶+5</label>
+    </div>
+
+    <button class="btn" onclick="addToCart()">加入</button>
     <button class="btn" onclick="closeModal()">取消</button>
+
   </div>
 </div>
 
-<!-- footer -->
 <div class="footer">
   <button onclick="checkout()">結帳</button>
   <button onclick="queryOrder()">訂單查詢</button>
@@ -146,7 +176,9 @@ body {
 let cart = []
 let currentItem = {}
 let userPhone = ""
+let selected = {type:"",ice:""}
 
+// 登入
 function login(){
   userPhone = document.getElementById("phone").value
   if(!userPhone) return alert("請輸入手機")
@@ -154,11 +186,15 @@ function login(){
   document.getElementById("menu").style.display="block"
 }
 
+// Modal
 function openModal(name,price,hasMilk){
   currentItem = {name,price,hasMilk}
-  document.getElementById("itemName").innerText=name
+  selected = {type:"",ice:""}
 
+  document.getElementById("itemName").innerText=name
   document.getElementById("milkOption").style.display = hasMilk ? "block":"none"
+
+  document.querySelectorAll(".option").forEach(o=>o.classList.remove("active"))
 
   document.getElementById("modal").style.display="block"
 }
@@ -167,69 +203,96 @@ function closeModal(){
   document.getElementById("modal").style.display="none"
 }
 
-function addToCart(){
-  let type = document.getElementById("type").value
-  let ice = document.getElementById("ice").value
+// 選擇按鈕
+function selectOption(key,value,el){
+  selected[key]=value
 
-  if(!ice){
-    alert("請選擇冰塊")
+  let group = el.parentNode.querySelectorAll(".option")
+  group.forEach(i=>i.classList.remove("active"))
+  el.classList.add("active")
+
+  // 瓶裝自動去冰
+  if(key==="type" && value==="瓶"){
+    selected.ice="去冰"
+    document.querySelectorAll(".option-group")[1]
+      .querySelectorAll(".option")[1].classList.add("active")
+  }
+}
+
+// 加入購物車
+function addToCart(){
+  if(!selected.type || !selected.ice){
+    alert("請選擇杯型與冰塊")
     return
   }
 
   let milk = document.getElementById("milk").checked ? 5 : 0
 
-  let item = {
+  cart.push({
     name: currentItem.name,
-    type,
-    ice,
+    type: selected.type,
+    ice: selected.ice,
     price: currentItem.price + milk
-  }
+  })
 
-  cart.push(item)
-  renderCart()
+  renderCheckout()
   closeModal()
 }
 
-function renderCart(){
-  let html = "<h3>購物車</h3>"
+// 渲染結帳（整合購物車）
+function renderCheckout(){
+
   let total = 0
+  let html = `<div class="checkout-box"><h3>訂單</h3>`
 
   cart.forEach((i,index)=>{
     total += i.price
-    html += `<div>${i.name} ${i.type} ${i.ice} $${i.price}
-    <button onclick="removeItem(${index})">刪除</button></div>`
+    html += `<div>
+      ${i.name} ${i.type} ${i.ice} $${i.price}
+      <button onclick="removeItem(${index})">❌</button>
+    </div>`
   })
 
-  html += `<b>總金額: $${total}</b>`
+  html += `<b>總金額：$${total}</b><br><br>`
 
-  document.getElementById("cart").innerHTML = html
+  // 時間選單
+  html += `取餐時間：
+  <select id="pickupTime">`
+
+  generateTimeOptions().forEach(t=>{
+    html += `<option value="${t}">${t}</option>`
+  })
+
+  html += `</select></div>`
+
+  document.getElementById("checkoutArea").innerHTML = html
 }
 
 function removeItem(i){
   cart.splice(i,1)
-  renderCart()
+  renderCheckout()
 }
 
+// 時間
 function generateTimeOptions(){
-  let times=[]
+  let arr=[]
   for(let h=9;h<=20;h++){
     for(let m=0;m<60;m+=10){
       if(h==9 && m<30) continue
       if(h==20 && m>30) continue
-      times.push(`${h}:${m.toString().padStart(2,'0')}`)
+      arr.push(`${h}:${m.toString().padStart(2,'0')}`)
     }
   }
-  return times
+  return arr
 }
 
+// 結帳
 function checkout(){
-  if(cart.length==0) return alert("購物車是空的")
+  if(cart.length==0) return alert("沒有商品")
 
-  let time = prompt("請輸入取餐時間，例如 12:30")
-
+  let time = document.getElementById("pickupTime").value
+  let total = cart.reduce((s,i)=>s+i.price,0)
   let orderId = "OD"+Date.now()
-
-  let total = cart.reduce((sum,i)=>sum+i.price,0)
 
   let order = {
     orderId,
@@ -241,22 +304,24 @@ function checkout(){
 
   sendOrder(order)
 
-  alert("訂單完成！編號："+orderId)
+  alert(`完成！訂單編號：${orderId}`)
 
   cart=[]
-  renderCart()
+  renderCheckout()
 }
 
+// API
 function sendOrder(order){
-  fetch("你的GAS API網址",{
+  fetch("你的GAS API",{
     method:"POST",
     body:JSON.stringify(order)
   })
 }
 
+// 查詢
 function queryOrder(){
-  let phone = prompt("輸入手機號碼")
-  alert("這裡之後串API查詢")
+  let phone = prompt("輸入手機")
+  alert("之後串API")
 }
 
 </script>

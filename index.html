@@ -76,7 +76,19 @@
       box-shadow: 0 4px 24px var(--shadow);
       text-align: center;
     }
-    .login-card .icon { font-size: 3rem; margin-bottom: 10px; }
+    .login-card .icon { 
+      width: 80px; 
+      height: 80px; 
+      margin: 0 auto 15px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 3px solid var(--almond);
+    }
+    .login-card .icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
     .login-card h2 { font-size: 1.3rem; color: var(--brown); margin-bottom: 6px; }
     .login-card p { font-size: 0.88rem; color: #888; margin-bottom: 24px; }
     .input-group {
@@ -226,6 +238,57 @@
       transition: opacity var(--trans);
     }
     .drink-card:hover .add-icon { opacity: 1; }
+
+    /* ===== 公告彈窗 (首頁彈窗) ===== */
+    .promo-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+    .promo-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .promo-content {
+      background: var(--white);
+      width: 100%;
+      max-width: 400px;
+      border-radius: 20px;
+      overflow: hidden;
+      position: relative;
+      transform: scale(0.8);
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    }
+    .promo-overlay.open .promo-content { transform: scale(1); }
+    .promo-img {
+      width: 100%;
+      display: block;
+      background: #f0f0f0;
+    }
+    .promo-footer {
+      padding: 20px;
+      text-align: center;
+    }
+    .btn-close-promo {
+      width: 100%;
+      padding: 12px;
+      background: var(--brown);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
 
     /* ===== 客製選項彈窗 ===== */
     .modal-overlay {
@@ -571,6 +634,16 @@
 </head>
 <body>
 
+<!-- ===== 首頁公告彈窗 ===== -->
+<div class="promo-overlay" id="promo-overlay">
+  <div class="promo-content">
+    <img src="https://images.unsplash.com/photo-1544787210-2213d4428677?q=80&w=1000&auto=format&fit=crop" alt="今日推薦" class="promo-img" id="promo-image">
+    <div class="promo-footer">
+      <button class="btn-close-promo" onclick="closePromo()">開始點餐</button>
+    </div>
+  </div>
+</div>
+
 <!-- ===== Header ===== -->
 <header>
   <div class="logo">春葉手作茶飲 <span>·</span> 線上點餐</div>
@@ -583,7 +656,10 @@
 <!-- ===== 登入畫面 ===== -->
 <div id="login-screen">
   <div class="login-card">
-    <div class="icon">🧋</div>
+    <div class="icon">
+      <!-- 您可以在此替換 src 為您的 Logo 圖片網址 -->
+      <img src="https://images.unsplash.com/photo-1594498653385-d5172c532c00?q=80&w=200&auto=format&fit=crop" alt="Logo" id="login-logo">
+    </div>
     <h2>歡迎光臨</h2>
     <p>請輸入手機號碼以開始點餐</p>
     <div class="input-group">
@@ -601,10 +677,9 @@
   <!-- 菜單 -->
   <div id="order-screen">
     <div class="category-tabs">
-      
       <button class="tab-btn" onclick="filterCategory('lols', this)">蓮藕、洛神</button>
-      <button class="tab-btn" onclick="filterCategory('flower', this)">花茶類</button>
-      <button class="tab-btn" onclick="filterCategory('tea', this)">純茶類、冬瓜</button>
+      <button class="tab-btn" onclick="filterCategory('flower', this)">花茶</button>
+      <button class="tab-btn" onclick="filterCategory('tea', this)">茶類、冬瓜</button>
       <button class="tab-btn" onclick="filterCategory('other', this)">其他</button>
     </div>
     <div class="menu-section" id="menu-container"></div>
@@ -718,32 +793,32 @@
 <script>
 // ===== 菜單資料 (支援杯裝/瓶裝獨立定價) =====
 const MENU = [
-  { id: 1, name: '蓮藕茶',				cupPrice: 50, bottlePrice: 95, 	hasMilk: false, category: ['lols']},
-  { id: 2, name: '蓮藕鮮奶',				cupPrice: 60, bottlePrice: 105, hasMilk: true,  category: ['lols']},
-  { id: 3, name: '洛神花茶',				cupPrice: 50, bottlePrice: 90, 	hasMilk: false, category: ['lols']},
-  { id: 4, name: '洛神冬瓜',				cupPrice: 50, bottlePrice: 90, 	hasMilk: false, category: ['lols']},
-  { id: 5, name: '古早味紅茶',			cupPrice: 30, bottlePrice: 65, 	hasMilk: false, category: ['tea']},
-  { id: 6, name: '紅茶鮮奶',				cupPrice: 50, bottlePrice: 85, 	hasMilk: true, 	category: ['tea']},
-  { id: 7, name: '高山烏龍茶（無糖）',		cupPrice: 35, bottlePrice: 70, 	hasMilk: false, category: ['tea']},
-  { id: 8, name: '烏龍綠茶（無糖）',		cupPrice: 35, bottlePrice: 70, 	hasMilk: false, category: ['tea']},
-  { id: 9, name: '烏龍鮮奶（無糖）',		cupPrice: 55, bottlePrice: 85, 	hasMilk: true, 	category: ['tea']},
-  { id: 10,name: '薰衣草茶',				cupPrice: 45, bottlePrice: 90, 	hasMilk: false, category: ['flower']},
-  { id: 11,name: '薰衣草紅茶',			cupPrice: 45, bottlePrice: 90, 	hasMilk: false, category: ['flower', 'tea']},
-  { id: 12,name: '薰衣草鮮奶茶(含紅茶)',	cupPrice: 55, bottlePrice: 95, 	hasMilk: true, 	category: ['tea','flower']},
-  { id: 13,name: '薰衣草鮮奶',			cupPrice: 60, bottlePrice: 105, hasMilk: true, 	category: ['flower']},
-  { id: 14,name: '玫瑰花茶',				cupPrice: 60, bottlePrice: 105, hasMilk: false, category: ['flower']},
-  { id: 15,name: '玫瑰洛神',				cupPrice: 60, bottlePrice: 105, hasMilk: false, category: ['flower']},
-  { id: 16,name: '玫瑰鮮奶茶（含紅茶）',	cupPrice: 65, bottlePrice: 115, hasMilk: true,  category: ['tea', 'flower']},
-  { id: 17,name: '玫瑰鮮奶',				cupPrice: 70, bottlePrice: 120, hasMilk: true,  category: ['flower']},
-  { id: 18,name: '無糖綠茶',				cupPrice: 30, bottlePrice: 65, 	hasMilk: false, category: ['tea']},
-  { id: 19,name: '綠茶鮮奶（無糖）',		cupPrice: 50, bottlePrice: 85, 	hasMilk: true, 	category: ['tea']},
-  { id: 20,name: '甘露冬瓜茶',			cupPrice: 30, bottlePrice: 60, 	hasMilk: false, category: ['tea']},
-  { id: 21,name: '冬瓜綠茶',				cupPrice: 30, bottlePrice: 60, 	hasMilk: false, category: ['tea']},
-  { id: 22,name: '冬瓜鮮奶',				cupPrice: 50, bottlePrice: 85, 	hasMilk: true, 	category: ['tea']},
+  { id: 1, name: '蓮藕茶',				cupPrice: 50, bottlePrice: 95, 	hasMilk: false, category: ['lols'], emoji: '🍵' },
+  { id: 2, name: '蓮藕鮮奶',				cupPrice: 60, bottlePrice: 105, hasMilk: true,  category: ['lols'], emoji: '🥛' },
+  { id: 3, name: '洛神花茶',				cupPrice: 50, bottlePrice: 90, 	hasMilk: false, category: ['lols'], emoji: '🌺' },
+  { id: 4, name: '洛神冬瓜',				cupPrice: 50, bottlePrice: 90, 	hasMilk: false, category: ['lols'], emoji: '🥤' },
+  { id: 5, name: '古早味紅茶',			cupPrice: 30, bottlePrice: 65, 	hasMilk: false, category: ['tea'], emoji: '🍂' },
+  { id: 6, name: '紅茶鮮奶',				cupPrice: 50, bottlePrice: 85, 	hasMilk: true, 	category: ['tea'], emoji: '🧋' },
+  { id: 7, name: '高山烏龍茶（無糖）',		cupPrice: 35, bottlePrice: 70, 	hasMilk: false, category: ['tea'], emoji: '⛰️' },
+  { id: 8, name: '烏龍綠茶（無糖）',		cupPrice: 35, bottlePrice: 70, 	hasMilk: false, category: ['tea'], emoji: '🍃' },
+  { id: 9, name: '烏龍鮮奶（無糖）',		cupPrice: 55, bottlePrice: 85, 	hasMilk: true, 	category: ['tea'], emoji: '🐮' },
+  { id: 10,name: '薰衣草茶',				cupPrice: 45, bottlePrice: 90, 	hasMilk: false, category: ['flower'], emoji: '💜' },
+  { id: 11,name: '薰衣草紅茶',			cupPrice: 45, bottlePrice: 90, 	hasMilk: false, category: ['flower', 'tea'], emoji: '🍵' },
+  { id: 12,name: '薰衣草鮮奶茶(含紅茶)',	cupPrice: 55, bottlePrice: 95, 	hasMilk: true, 	category: ['tea','flower'], emoji: '🥛' },
+  { id: 13,name: '薰衣草鮮奶',			cupPrice: 60, bottlePrice: 105, hasMilk: true, 	category: ['flower'], emoji: '🐮' },
+  { id: 14,name: '玫瑰花茶',				cupPrice: 60, bottlePrice: 105, hasMilk: false, category: ['flower'], emoji: '🌹' },
+  { id: 15,name: '玫瑰洛神',				cupPrice: 60, bottlePrice: 105, hasMilk: false, category: ['flower'], emoji: '🍷' },
+  { id: 16,name: '玫瑰鮮奶茶（含紅茶）',	cupPrice: 65, bottlePrice: 115, hasMilk: true,  category: ['tea', 'flower'], emoji: '🥛' },
+  { id: 17,name: '玫瑰鮮奶',				cupPrice: 70, bottlePrice: 120, hasMilk: true,  category: ['flower'], emoji: '🐮' },
+  { id: 18,name: '無糖綠茶',				cupPrice: 30, bottlePrice: 65, 	hasMilk: false, category: ['tea'], emoji: '🍵' },
+  { id: 19,name: '綠茶鮮奶（無糖）',		cupPrice: 50, bottlePrice: 85, 	hasMilk: true, 	category: ['tea'], emoji: '🥛' },
+  { id: 20,name: '甘露冬瓜茶',			cupPrice: 30, bottlePrice: 60, 	hasMilk: false, category: ['tea'], emoji: '🥤' },
+  { id: 21,name: '冬瓜綠茶',				cupPrice: 30, bottlePrice: 60, 	hasMilk: false, category: ['tea'], emoji: '🍃' },
+  { id: 22,name: '冬瓜鮮奶',				cupPrice: 50, bottlePrice: 85, 	hasMilk: true, 	category: ['tea'], emoji: '🐮' },
 ];
 
 // ===== Google Apps Script 網址 =====
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbwNJZ_y5bug9xxtfJQ0cSwf14QY9qw2ST_tJwU2fA51qCAyc8Xn51oVZI2rPcm0XPk4/exec'
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbxaiS-2ZdwK_DyNoPWJ8FM2F3hcLHdPSgdSe73MaaXfk9jZeopj8seq3INDhpnvTqs3/exec'
 
 // ===== 狀態 =====
 let currentPhone = '';
@@ -752,6 +827,15 @@ let cart = [];
 let currentDrink = null;
 let currentOptions = { cup: '杯裝', ice: '有冰', extraMilk: '不加', qty: 1 };
 let orderCounter = parseInt(localStorage.getItem('orderCounter') || '0');
+
+// ===== 初始化 =====
+window.onload = function() {
+  // 移除首頁自動彈窗邏輯
+};
+
+function closePromo() {
+  document.getElementById('promo-overlay').classList.remove('open');
+}
 
 // ===== 登入相關功能 =====
 function checkUserRecord() {
@@ -790,6 +874,9 @@ function doLogin() {
   
   showPanel('menu');
   renderMenu(MENU);
+
+  // 登入完成後顯示公告彈窗
+  document.getElementById('promo-overlay').classList.add('open');
 }
 
 // ===== 菜單渲染 =====
@@ -798,10 +885,10 @@ function renderMenu(items) {
   container.innerHTML = '';
   
   const categories = {
-    'lols': '蓮藕、洛神系列',
-    'flower': '花茶系列',
-    'tea': '茶類、冬瓜系列',
-    'other': '其他'
+    'lols': '🌿 蓮藕、洛神系列',
+    'flower': '🌸 花茶系列',
+    'tea': '🍵 茶類、冬瓜系列',
+    'other': '✨ 其他推薦'
   };
 
   for (let cat in categories) {
@@ -816,7 +903,7 @@ function renderMenu(items) {
         ${catItems.map(item => `
           <div class="drink-card" onclick="openModal(${item.id})">
             <div class="add-icon">+</div>
-            <div class="drink-name">${item.name}</div>
+            <div class="drink-name"> ${item.name}</div>
             <div class="drink-prices">
               <div class="price-tag"><span>杯裝</span><span class="val">$${item.cupPrice}</span></div>
               <div class="price-tag"><span>瓶裝</span><span class="val">$${item.bottlePrice}</span></div>
@@ -931,6 +1018,7 @@ function addToCart() {
     id: Date.now(),
     drinkId: currentDrink.id,
     name: currentDrink.name,
+    emoji: currentDrink.emoji,
     price: basePrice,
     cup: currentOptions.cup,
     ice: currentOptions.ice,
@@ -993,8 +1081,6 @@ function generatePickupTimes() {
   select.innerHTML = '';
   
   const now = new Date();
-  const currentHour = now.getHours();
-  const currentMin = now.getMinutes();
   
   let hasOptions = false;
   for (let h = 9; h <= 20; h++) {

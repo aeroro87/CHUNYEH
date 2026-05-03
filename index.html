@@ -315,6 +315,13 @@
       color: var(--white);
       border-color: var(--brown);
     }
+    .opt-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      background: #eee;
+      border-color: #ddd;
+      color: #aaa;
+    }
     .opt-btn .opt-extra { font-size: 0.75rem; opacity: 0.85; margin-top: 2px; }
 
     /* 加入購物車按鈕 */
@@ -373,12 +380,11 @@
     .nav-icon { font-size: 1.4rem; }
     .cart-badge {
       position: absolute;
-      top: 6px;
-      right: calc(50% - 20px);
-      background: #e05a3a;
+      top: 5px;
+      right: 25%;
+      background: #e74c3c;
       color: white;
       font-size: 0.7rem;
-      font-weight: 700;
       min-width: 18px;
       height: 18px;
       border-radius: 9px;
@@ -386,21 +392,23 @@
       align-items: center;
       justify-content: center;
       padding: 0 4px;
+      font-weight: 700;
       display: none;
     }
 
-    /* ===== 購物車面板 ===== */
+    /* ===== 面板共通樣式 ===== */
     #cart-panel, #orders-panel {
       display: none;
-      padding: 16px;
+      padding: 20px 16px;
     }
     .panel-title {
       font-size: 1.2rem;
       font-weight: 700;
       color: var(--brown);
-      margin-bottom: 16px;
-      padding-bottom: 10px;
-      border-bottom: 2px solid var(--almond);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     /* 購物車項目 */
@@ -408,43 +416,36 @@
       background: var(--white);
       border-radius: var(--radius);
       padding: 14px;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
       display: flex;
       align-items: center;
       gap: 12px;
       box-shadow: 0 2px 8px var(--shadow);
     }
-    
     .cart-item-info { flex: 1; }
-    .cart-item-name { font-weight: 700; font-size: 0.95rem; }
-    .cart-item-opts { font-size: 0.8rem; color: #888; margin-top: 3px; }
-    .cart-item-price { font-weight: 700; color: var(--tan); font-size: 0.95rem; }
+    .cart-item-name { font-size: 0.95rem; font-weight: 700; color: var(--dark); }
+    .cart-item-opts { font-size: 0.8rem; color: #888; margin-top: 2px; }
+    .cart-item-price { font-size: 0.95rem; font-weight: 700; color: var(--tan); }
     .cart-item-remove {
-      background: none;
       border: none;
-      color: #ccc;
-      font-size: 1.2rem;
+      background: #fdeaea;
+      color: #e74c3c;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
       cursor: pointer;
-      padding: 4px;
-      transition: color var(--trans);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
     }
-    .cart-item-remove:hover { color: #e05a3a; }
 
-    /* 空購物車 */
-    .empty-state {
-      text-align: center;
-      padding: 40px 20px;
-      color: #bbb;
-    }
-    .empty-state .empty-icon { font-size: 3rem; margin-bottom: 10px; }
-    .empty-state p { font-size: 0.9rem; }
-
-    /* 取餐時間選擇 */
+    /* 結帳區 */
     .pickup-section {
       background: var(--white);
       border-radius: var(--radius);
       padding: 16px;
-      margin: 16px 0;
+      margin: 20px 0;
       box-shadow: 0 2px 8px var(--shadow);
     }
     .pickup-section label {
@@ -456,49 +457,46 @@
     }
     .pickup-section select {
       width: 100%;
-      padding: 11px 14px;
+      padding: 10px;
       border: 2px solid var(--almond);
-      border-radius: 10px;
+      border-radius: 8px;
+      font-size: 1rem;
       background: var(--cream);
-      color: var(--dark);
-      font-size: 0.95rem;
       outline: none;
-      cursor: pointer;
-      transition: border-color var(--trans);
     }
-    .pickup-section select:focus { border-color: var(--tan); }
-
-    /* 金額總計 */
     .total-bar {
-      background: var(--almond);
-      border-radius: var(--radius);
-      padding: 14px 16px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 14px;
+      padding: 16px;
+      background: var(--white);
+      border-radius: var(--radius);
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px var(--shadow);
     }
-    .total-bar span { font-size: 0.95rem; color: var(--brown); font-weight: 600; }
-    .total-bar strong { font-size: 1.3rem; color: var(--dark); }
+    .total-bar span { font-size: 1rem; color: var(--brown); font-weight: 600; }
+    .total-bar strong { font-size: 1.3rem; color: var(--tan); }
 
-    /* ===== 訂單查詢 ===== */
+    /* 訂單查詢卡片 */
     .order-card {
       background: var(--white);
       border-radius: var(--radius);
-      padding: 16px;
-      margin-bottom: 12px;
-      box-shadow: 0 2px 8px var(--shadow);
+      padding: 18px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 12px var(--shadow);
+      border-left: 5px solid var(--tan);
     }
-    .order-card-header {
+    .order-header {
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px dashed var(--almond);
     }
     .order-id { font-size: 0.85rem; font-weight: 700; color: var(--brown); }
-    .order-time { font-size: 0.8rem; color: #aaa; }
+    .order-time { font-size: 0.8rem; color: #999; }
     .order-pickup {
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       color: var(--tan);
       font-weight: 600;
       margin-bottom: 8px;
@@ -603,10 +601,10 @@
   <!-- 菜單 -->
   <div id="order-screen">
     <div class="category-tabs">
-      <button class="tab-btn active" onclick="filterCategory('all', this)">全部</button>
+      
       <button class="tab-btn" onclick="filterCategory('lols', this)">蓮藕、洛神</button>
-      <button class="tab-btn" onclick="filterCategory('flower', this)">花茶</button>
-      <button class="tab-btn" onclick="filterCategory('tea', this)">茶類、冬瓜</button>
+      <button class="tab-btn" onclick="filterCategory('flower', this)">花茶類</button>
+      <button class="tab-btn" onclick="filterCategory('tea', this)">純茶類、冬瓜</button>
       <button class="tab-btn" onclick="filterCategory('other', this)">其他</button>
     </div>
     <div class="menu-section" id="menu-container"></div>
@@ -677,7 +675,7 @@
     <!-- 冰塊 -->
     <div class="option-group">
       <div class="option-label">🧊 冰塊選擇 </div>
-      <div class="option-buttons">
+      <div class="option-buttons" id="modal-ice-options">
         <button class="opt-btn selected" data-group="ice" data-value="有冰" onclick="selectOpt(this)">
           有冰
         </button>
@@ -700,6 +698,16 @@
       </div>
     </div>
 
+    <!-- 數量選擇 -->
+    <div class="option-group">
+      <div class="option-label">🔢 購買數量</div>
+      <div style="display: flex; align-items: center; gap: 20px; justify-content: center; background: var(--cream); padding: 10px; border-radius: 10px;">
+        <button onclick="updateQty(-1)" style="width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--tan); background: white; color: var(--tan); font-size: 1.5rem; font-weight: bold; cursor: pointer;">-</button>
+        <span id="modal-qty" style="font-size: 1.4rem; font-weight: 700; min-width: 30px; text-align: center;">1</span>
+        <button onclick="updateQty(1)" style="width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--tan); background: var(--tan); color: white; font-size: 1.5rem; font-weight: bold; cursor: pointer;">+</button>
+      </div>
+    </div>
+
     <button class="btn-add-cart" onclick="addToCart()">
       <span>加入購物車</span>
       <span id="modal-add-price"></span>
@@ -710,39 +718,39 @@
 <script>
 // ===== 菜單資料 (支援杯裝/瓶裝獨立定價) =====
 const MENU = [
-  { id: 1, name: '蓮藕茶',				cupPrice: 50, bottlePrice: 95, 	hasMilk: false, category: ['lols'] },
-  { id: 2, name: '蓮藕鮮奶',				cupPrice: 60, bottlePrice: 105, hasMilk: true,  category: ['lols'] },
-  { id: 3, name: '洛神花茶',				cupPrice: 50, bottlePrice: 90, 	hasMilk: false, category: ['lols'] },
-  { id: 4, name: '洛神冬瓜',				cupPrice: 50, bottlePrice: 90, 	hasMilk: false, category: ['lols'] },
-  { id: 5, name: '古早味紅茶',			cupPrice: 30, bottlePrice: 65, 	hasMilk: false, category: ['tea'] },
-  { id: 6, name: '紅茶鮮奶',				cupPrice: 50, bottlePrice: 85, 	hasMilk: true, 	category: ['tea'] },
-  { id: 7, name: '高山烏龍茶（無糖）',		cupPrice: 35, bottlePrice: 70, 	hasMilk: false, category: ['tea'] },
-  { id: 8, name: '烏龍綠茶（無糖）',		cupPrice: 35, bottlePrice: 70, 	hasMilk: false, category: ['tea'] },
-  { id: 9, name: '烏龍鮮奶（無糖）',		cupPrice: 55, bottlePrice: 85, 	hasMilk: true, 	category: ['tea'] },
-  { id: 10,name: '薰衣草茶',				cupPrice: 45, bottlePrice: 90, 	hasMilk: false, category: ['flower'] },
-  { id: 11,name: '薰衣草紅茶',			cupPrice: 45, bottlePrice: 90, 	hasMilk: false, category: ['flower', 'tea'] },
-  { id: 12,name: '薰衣草鮮奶茶(含紅茶)',	cupPrice: 55, bottlePrice: 95, 	hasMilk: true, 	category: ['tea','flower'] },
-  { id: 13,name: '薰衣草鮮奶',			cupPrice: 60, bottlePrice: 105, hasMilk: true, 	category: ['flower'] },
-  { id: 14,name: '玫瑰花茶',				cupPrice: 60, bottlePrice: 105, hasMilk: false, category: ['flower'] },
-  { id: 15,name: '玫瑰洛神',				cupPrice: 60, bottlePrice: 105, hasMilk: false, category: ['flower'] },
-  { id: 16,name: '玫瑰鮮奶茶（含紅茶）',	cupPrice: 65, bottlePrice: 115, hasMilk: true,  category: ['tea', 'flower'] },
-  { id: 17,name: '玫瑰鮮奶',				cupPrice: 70, bottlePrice: 120, hasMilk: true,  category: ['flower'] },
-  { id: 18,name: '無糖綠茶',				cupPrice: 30, bottlePrice: 65, 	hasMilk: false, category: ['tea'] },
-  { id: 19,name: '綠茶鮮奶（無糖）',		cupPrice: 50, bottlePrice: 85, 	hasMilk: true, 	category: ['tea'] },
-  { id: 20,name: '甘露冬瓜茶',			cupPrice: 30, bottlePrice: 60, 	hasMilk: false, category: ['tea'] },
-  { id: 21,name: '冬瓜綠茶',				cupPrice: 30, bottlePrice: 60, 	hasMilk: false, category: ['tea'] },
-  { id: 22,name: '冬瓜鮮奶',				cupPrice: 50, bottlePrice: 85, 	hasMilk: true, 	category: ['tea'] },
-   
+  { id: 1, name: '蓮藕茶',				cupPrice: 50, bottlePrice: 95, 	hasMilk: false, category: ['lols']},
+  { id: 2, name: '蓮藕鮮奶',				cupPrice: 60, bottlePrice: 105, hasMilk: true,  category: ['lols']},
+  { id: 3, name: '洛神花茶',				cupPrice: 50, bottlePrice: 90, 	hasMilk: false, category: ['lols']},
+  { id: 4, name: '洛神冬瓜',				cupPrice: 50, bottlePrice: 90, 	hasMilk: false, category: ['lols']},
+  { id: 5, name: '古早味紅茶',			cupPrice: 30, bottlePrice: 65, 	hasMilk: false, category: ['tea']},
+  { id: 6, name: '紅茶鮮奶',				cupPrice: 50, bottlePrice: 85, 	hasMilk: true, 	category: ['tea']},
+  { id: 7, name: '高山烏龍茶（無糖）',		cupPrice: 35, bottlePrice: 70, 	hasMilk: false, category: ['tea']},
+  { id: 8, name: '烏龍綠茶（無糖）',		cupPrice: 35, bottlePrice: 70, 	hasMilk: false, category: ['tea']},
+  { id: 9, name: '烏龍鮮奶（無糖）',		cupPrice: 55, bottlePrice: 85, 	hasMilk: true, 	category: ['tea']},
+  { id: 10,name: '薰衣草茶',				cupPrice: 45, bottlePrice: 90, 	hasMilk: false, category: ['flower']},
+  { id: 11,name: '薰衣草紅茶',			cupPrice: 45, bottlePrice: 90, 	hasMilk: false, category: ['flower', 'tea']},
+  { id: 12,name: '薰衣草鮮奶茶(含紅茶)',	cupPrice: 55, bottlePrice: 95, 	hasMilk: true, 	category: ['tea','flower']},
+  { id: 13,name: '薰衣草鮮奶',			cupPrice: 60, bottlePrice: 105, hasMilk: true, 	category: ['flower']},
+  { id: 14,name: '玫瑰花茶',				cupPrice: 60, bottlePrice: 105, hasMilk: false, category: ['flower']},
+  { id: 15,name: '玫瑰洛神',				cupPrice: 60, bottlePrice: 105, hasMilk: false, category: ['flower']},
+  { id: 16,name: '玫瑰鮮奶茶（含紅茶）',	cupPrice: 65, bottlePrice: 115, hasMilk: true,  category: ['tea', 'flower']},
+  { id: 17,name: '玫瑰鮮奶',				cupPrice: 70, bottlePrice: 120, hasMilk: true,  category: ['flower']},
+  { id: 18,name: '無糖綠茶',				cupPrice: 30, bottlePrice: 65, 	hasMilk: false, category: ['tea']},
+  { id: 19,name: '綠茶鮮奶（無糖）',		cupPrice: 50, bottlePrice: 85, 	hasMilk: true, 	category: ['tea']},
+  { id: 20,name: '甘露冬瓜茶',			cupPrice: 30, bottlePrice: 60, 	hasMilk: false, category: ['tea']},
+  { id: 21,name: '冬瓜綠茶',				cupPrice: 30, bottlePrice: 60, 	hasMilk: false, category: ['tea']},
+  { id: 22,name: '冬瓜鮮奶',				cupPrice: 50, bottlePrice: 85, 	hasMilk: true, 	category: ['tea']},
 ];
 
 // ===== Google Apps Script 網址 =====
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbxaiS-2ZdwK_DyNoPWJ8FM2F3hcLHdPSgdSe73MaaXfk9jZeopj8seq3INDhpnvTqs3/exec'
+
 // ===== 狀態 =====
 let currentPhone = '';
 let currentUserName = '';
 let cart = [];
 let currentDrink = null;
-let currentOptions = { cup: '杯裝', ice: '有冰', extraMilk: '不加' };
+let currentOptions = { cup: '杯裝', ice: '有冰', extraMilk: '不加', qty: 1 };
 let orderCounter = parseInt(localStorage.getItem('orderCounter') || '0');
 
 // ===== 登入相關功能 =====
@@ -752,92 +760,97 @@ function checkUserRecord() {
   const nameInput = document.getElementById('name-input');
   
   if (/^09\d{8}$/.test(phone)) {
-    const savedName = localStorage.getItem('user_name_' + phone);
+    const savedName = localStorage.getItem('userName_' + phone);
     if (savedName) {
+      nameGroup.style.display = 'none';
       nameInput.value = savedName;
-      nameGroup.style.display = 'none'; // 已有紀錄，隱藏姓名輸入框
     } else {
       nameGroup.style.display = 'block';
+      nameInput.value = '';
     }
-  } else {
-    nameGroup.style.display = 'block';
   }
 }
 
 function doLogin() {
   const phone = document.getElementById('phone-input').value.trim();
-  const nameInput = document.getElementById('name-input');
-  let name = nameInput.value.trim();
-
-  if (!/^09\d{8}$/.test(phone)) {
-    showToast('請輸入正確的手機號碼');
-    return;
-  }
-
-  // 如果姓名輸入框是顯示的，則必須填寫
-  if (document.getElementById('name-group').style.display !== 'none' && !name) {
-    showToast('首次登入請輸入姓名');
-    return;
-  }
-
-  // 儲存資訊
+  const name = document.getElementById('name-input').value.trim();
+  
+  if (!/^09\d{8}$/.test(phone)) return alert('請輸入正確的手機號碼 (10位數字)');
+  if (!name) return alert('請輸入您的姓名或暱稱');
+  
   currentPhone = phone;
-  currentUserName = name || localStorage.getItem('user_name_' + phone) || '顧客';
-  localStorage.setItem('user_name_' + phone, currentUserName);
-
+  currentUserName = name;
+  localStorage.setItem('userName_' + phone, name);
+  
   document.getElementById('login-screen').style.display = 'none';
   document.getElementById('order-screen').style.display = 'block';
   document.getElementById('bottom-nav').style.display = 'flex';
   document.getElementById('user-info').style.display = 'block';
-  document.getElementById('display-phone').textContent = currentUserName;
+  document.getElementById('display-phone').textContent = `${name} (${phone})`;
   
+  showPanel('menu');
   renderMenu(MENU);
-  generatePickupTimes();
 }
 
-// ===== 渲染菜單 =====
+// ===== 菜單渲染 =====
 function renderMenu(items) {
   const container = document.getElementById('menu-container');
-  if (items.length === 0) {
-    container.innerHTML = '<div class="empty-state"><div class="empty-icon">🔍</div><p>此分類暫無品項</p></div>';
-    return;
-  }
-  container.innerHTML = `
-    <div class="section-title">每日新鮮手工熬煮，甜度固定無法調整</div>
-    <div class="menu-grid">
-      ${items.map(d => `
-        <div class="drink-card" onclick="openModal(${d.id})">
-          <div class="add-icon">+</div>
-          <div class="drink-name">${d.name}</div>
-          <div class="drink-prices">
-            <div class="price-tag"><span>杯裝</span><span class="val">$${d.cupPrice}</span></div>
-            <div class="price-tag"><span>瓶裝</span><span class="val">$${d.bottlePrice}</span></div>
+  container.innerHTML = '';
+  
+  const categories = {
+    'lols': '蓮藕、洛神系列',
+    'flower': '花茶系列',
+    'tea': '茶類、冬瓜系列',
+    'other': '其他'
+  };
+
+  for (let cat in categories) {
+    const catItems = items.filter(i => i.category.includes(cat));
+    if (catItems.length === 0) continue;
+
+    const section = document.createElement('div');
+    section.className = 'menu-section';
+    section.innerHTML = `
+      <div class="section-title">${categories[cat]}</div>
+      <div class="menu-grid">
+        ${catItems.map(item => `
+          <div class="drink-card" onclick="openModal(${item.id})">
+            <div class="add-icon">+</div>
+            <div class="drink-name">${item.name}</div>
+            <div class="drink-prices">
+              <div class="price-tag"><span>杯裝</span><span class="val">$${item.cupPrice}</span></div>
+              <div class="price-tag"><span>瓶裝</span><span class="val">$${item.bottlePrice}</span></div>
+            </div>
           </div>
-         
-        </div>
-      `).join('')}
-    </div>
-  `;
+        `).join('')}
+      </div>
+    `;
+    container.appendChild(section);
+  }
 }
 
-// ===== 分類篩選 =====
 function filterCategory(cat, btn) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  const filtered = cat === 'all' ? MENU : MENU.filter(d => d.category.includes(cat));
-  renderMenu(filtered);
+  
+  if (cat === 'all') {
+    renderMenu(MENU);
+  } else {
+    const filtered = MENU.filter(i => i.category.includes(cat));
+    renderMenu(filtered);
+  }
 }
 
-// ===== 開啟客製彈窗 =====
+// ===== 客製選項彈窗 =====
 function openModal(id) {
   currentDrink = MENU.find(d => d.id === id);
-  currentOptions = { cup: '杯裝', ice: '有冰', extraMilk: '不加' };
+  currentOptions = { cup: '杯裝', ice: '有冰', extraMilk: '不加', qty: 1 };
+  document.getElementById('modal-qty').textContent = '1';
 
   document.getElementById('modal-emoji').textContent = currentDrink.emoji;
   document.getElementById('modal-name').textContent = currentDrink.name;
   document.getElementById('modal-price').textContent = `杯裝 $${currentDrink.cupPrice} / 瓶裝 $${currentDrink.bottlePrice}`;
 
-  // 動態生成杯裝/瓶裝按鈕（顯示對應價格）
   const cupContainer = document.getElementById('modal-cup-options');
   cupContainer.innerHTML = `
     <button class="opt-btn selected" data-group="cup" data-value="杯裝" onclick="selectOpt(this)">
@@ -848,112 +861,109 @@ function openModal(id) {
     </button>
   `;
 
-  // 重置冰塊與鮮奶選項按鈕
-  document.querySelectorAll('[data-group="ice"], [data-group="extraMilk"]').forEach(b => {
-    b.classList.remove('selected');
-    if (b.dataset.value === '有冰' || b.dataset.value === '不加') {
-      b.classList.add('selected');
-    }
-  });
-
   document.getElementById('milk-option').style.display = currentDrink.hasMilk ? 'block' : 'none';
+  
+  // 重置冰塊選項樣式
+  const iceBtns = document.querySelectorAll('#modal-ice-options .opt-btn');
+  iceBtns.forEach(b => {
+    b.disabled = false;
+    b.classList.remove('selected');
+    if(b.dataset.value === '有冰') b.classList.add('selected');
+  });
 
   updateModalPrice();
   document.getElementById('drink-modal').classList.add('open');
 }
 
 function closeModal(e) {
-  if (e.target === document.getElementById('drink-modal')) {
+  if (e.target.id === 'drink-modal' || e.target.className === 'modal-handle') {
     document.getElementById('drink-modal').classList.remove('open');
   }
 }
 
-// ===== 選項切換 =====
 function selectOpt(btn) {
   const group = btn.dataset.group;
-  document.querySelectorAll(`[data-group="${group}"]`).forEach(b => b.classList.remove('selected'));
+  const val = btn.dataset.value;
+  
+  // 瓶裝鎖定去冰邏輯
+  if (group === 'cup') {
+    const iceBtns = document.querySelectorAll('#modal-ice-options .opt-btn');
+    if (val === '瓶裝') {
+      currentOptions.ice = '去冰';
+      iceBtns.forEach(b => {
+        b.classList.remove('selected');
+        if (b.dataset.value === '去冰') b.classList.add('selected');
+        if (b.dataset.value === '有冰') b.disabled = true;
+      });
+    } else {
+      iceBtns.forEach(b => b.disabled = false);
+    }
+  }
+
+  document.querySelectorAll(`.opt-btn[data-group="${group}"]`).forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
-  currentOptions[group] = btn.dataset.value;
+  currentOptions[group] = val;
+  updateModalPrice();
+}
+
+function updateQty(delta) {
+  currentOptions.qty = Math.max(1, currentOptions.qty + delta);
+  document.getElementById('modal-qty').textContent = currentOptions.qty;
   updateModalPrice();
 }
 
 function updateModalPrice() {
   if (!currentDrink) return;
-  // 根據選擇的容器獲取基礎價格
-  let total = currentOptions.cup === '瓶裝' ? currentDrink.bottlePrice : currentDrink.cupPrice;
-  if (currentOptions.extraMilk === '加量') total += 5;
+  let base = currentOptions.cup === '瓶裝' ? currentDrink.bottlePrice : currentDrink.cupPrice;
+  if (currentOptions.extraMilk === '加量') base += 5;
+  let total = base * currentOptions.qty;
   document.getElementById('modal-add-price').textContent = `$${total}`;
 }
 
-// ===== 加入購物車 =====
+// ===== 購物車功能 =====
 function addToCart() {
   if (!currentDrink) return;
   let basePrice = currentOptions.cup === '瓶裝' ? currentDrink.bottlePrice : currentDrink.cupPrice;
-  let itemTotal = basePrice;
-  if (currentOptions.extraMilk === '加量') itemTotal += 5;
+  let unitTotal = basePrice + (currentOptions.extraMilk === '加量' ? 5 : 0);
+  let itemTotal = unitTotal * currentOptions.qty;
 
   cart.push({
     id: Date.now(),
     drinkId: currentDrink.id,
     name: currentDrink.name,
-    emoji: currentDrink.emoji,
-    price: basePrice, // 儲存當時選擇容器的基礎價格
+    price: basePrice,
     cup: currentOptions.cup,
     ice: currentOptions.ice,
     extraMilk: currentOptions.extraMilk === '加量',
-    itemTotal
+    qty: currentOptions.qty,
+    unitTotal: unitTotal,
+    itemTotal: itemTotal
   });
 
   updateCartBadge();
   document.getElementById('drink-modal').classList.remove('open');
-  showToast(`✅ 已加入：${currentDrink.name}(${currentOptions.cup})`);
+  showToast(`已加入購物車：${currentDrink.name} x ${currentOptions.qty}`);
 }
 
-// ===== 更新購物車徽章 =====
 function updateCartBadge() {
   const badge = document.getElementById('cart-badge');
-  if (cart.length > 0) {
-    badge.style.display = 'flex';
-    badge.textContent = cart.length;
-  } else {
-    badge.style.display = 'none';
-  }
+  const count = cart.reduce((sum, item) => sum + item.qty, 0);
+  badge.textContent = count;
+  badge.style.display = count > 0 ? 'flex' : 'none';
 }
 
-// ===== 面板切換 =====
-function showPanel(panel) {
-  document.getElementById('order-screen').style.display = 'none';
-  document.getElementById('cart-panel').style.display = 'none';
-  document.getElementById('orders-panel').style.display = 'none';
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-
-  if (panel === 'menu') {
-    document.getElementById('order-screen').style.display = 'block';
-    document.getElementById('nav-menu').classList.add('active');
-  } else if (panel === 'cart') {
-    document.getElementById('cart-panel').style.display = 'block';
-    document.getElementById('nav-cart').classList.add('active');
-    renderCart();
-  } else if (panel === 'orders') {
-    document.getElementById('orders-panel').style.display = 'block';
-    document.getElementById('nav-orders').classList.add('active');
-    loadOrders();
-  }
+function removeFromCart(id) {
+  cart = cart.filter(i => i.id !== id);
+  updateCartBadge();
+  renderCart();
 }
 
-// ===== 渲染購物車 =====
 function renderCart() {
   const container = document.getElementById('cart-items-container');
   const checkoutArea = document.getElementById('cart-checkout-area');
-  const successArea = document.getElementById('order-success-area');
-  successArea.style.display = 'none';
-
+  
   if (cart.length === 0) {
-    container.innerHTML = `
-      <div class="empty-state">
-        <div class="empty-icon">🛒</div>
-        <p>購物車是空的，快去選購吧！</p>
-      </div>`;
+    container.innerHTML = '<div style="text-align:center; padding:40px; color:#999;">購物車是空的</div>';
     checkoutArea.style.display = 'none';
     return;
   }
@@ -961,7 +971,7 @@ function renderCart() {
   container.innerHTML = cart.map(item => `
     <div class="cart-item">
       <div class="cart-item-info">
-        <div class="cart-item-name">${item.name} (${item.cup})</div>
+        <div class="cart-item-name">${item.name} (${item.cup}) x ${item.qty}</div>
         <div class="cart-item-opts">
           ${item.ice}${item.extraMilk ? ' · 鮮奶加量' : ''}
         </div>
@@ -971,18 +981,13 @@ function renderCart() {
     </div>
   `).join('');
 
-  const total = cart.reduce((s, i) => s + i.itemTotal, 0);
+  const total = cart.reduce((sum, i) => sum + i.itemTotal, 0);
   document.getElementById('cart-total').textContent = `$${total}`;
   checkoutArea.style.display = 'block';
+  generatePickupTimes();
 }
 
-function removeFromCart(id) {
-  cart = cart.filter(i => i.id !== id);
-  updateCartBadge();
-  renderCart();
-}
-
-// ===== 生成取餐時間選項 (動態隱藏過去時間) =====
+// ===== 時間處理 =====
 function generatePickupTimes() {
   const select = document.getElementById('pickup-time');
   select.innerHTML = '';
@@ -990,161 +995,166 @@ function generatePickupTimes() {
   const now = new Date();
   const currentHour = now.getHours();
   const currentMin = now.getMinutes();
-  const currentTimeInMinutes = currentHour * 60 + currentMin;
   
-  const start = 9 * 60 + 30;  // 09:30
-  const end   = 20 * 60 + 30; // 20:30
-  
-  let count = 0;
-  for (let m = start; m <= end; m += 10) {
-    // 只顯示比現在晚 10 分鐘以後的時間 (給店家一點準備緩衝)
-    if (m > currentTimeInMinutes + 10) {
-      const h = String(Math.floor(m / 60)).padStart(2, '0');
-      const min = String(m % 60).padStart(2, '0');
-      const opt = document.createElement('option');
-      opt.value = `${h}:${min}`;
-      opt.textContent = `${h}:${min}`;
-      select.appendChild(opt);
-      count++;
+  let hasOptions = false;
+  for (let h = 9; h <= 20; h++) {
+    for (let m = 0; m < 60; m += 10) {
+      if (h === 9 && m < 30) continue;
+      if (h === 20 && m > 30) continue;
+      
+      // 隱藏過去的時間 + 10分鐘緩衝
+      const optionTime = new Date();
+      optionTime.setHours(h, m, 0);
+      const bufferTime = new Date(now.getTime() + 10 * 60000);
+      
+      if (optionTime > bufferTime) {
+        const timeStr = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
+        select.innerHTML += `<option value="${timeStr}">${timeStr}</option>`;
+        hasOptions = true;
+      }
     }
   }
   
-  if (count === 0) {
-    const opt = document.createElement('option');
-    opt.textContent = "今日已過營業時間";
-    select.appendChild(opt);
+  if (!hasOptions) {
+    select.innerHTML = '<option value="">今日已結束營業</option>';
     document.getElementById('submit-btn').disabled = true;
-    document.getElementById('submit-btn').textContent = "今日已結束營業";
+    document.getElementById('submit-btn').style.opacity = '0.5';
   } else {
     document.getElementById('submit-btn').disabled = false;
-    document.getElementById('submit-btn').textContent = "確認送出訂單";
+    document.getElementById('submit-btn').style.opacity = '1';
   }
 }
 
-// ===== 生成訂單編號 =====
-function generateOrderId() {
-  orderCounter++;
-  localStorage.setItem('orderCounter', orderCounter);
-  const now = new Date();
-  const date = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}`;
-  return `ORD-${date}-${String(orderCounter).padStart(4,'0')}`;
-}
-
-// ===== 送出訂單 =====
+// ===== 訂單提交 =====
 async function submitOrder() {
-  if (cart.length === 0) { showToast('購物車是空的！'); return; }
   const pickupTime = document.getElementById('pickup-time').value;
-  const orderId = generateOrderId();
-  const total = cart.reduce((s, i) => s + i.itemTotal, 0);
-
-  const order = {
-    orderId,
-    phone: currentPhone,
-    userName: currentUserName,
-    timestamp: new Date().toISOString(),
-    pickupTime,
-    totalAmount: total,
-    items: cart.map(i => ({
-      name: i.name,
-      price: i.price,
-      cup: i.cup,
-      ice: i.ice,
-      extraMilk: i.extraMilk,
-      itemTotal: i.itemTotal
-    }))
-  };
-
-  const saved = JSON.parse(localStorage.getItem('orders') || '[]');
-  saved.push(order);
-  localStorage.setItem('orders', JSON.stringify(saved));
+  if (!pickupTime) return alert('目前非營業時間，無法下單');
 
   const btn = document.getElementById('submit-btn');
-  btn.innerHTML = '<span class="spinner"></span> 送出中...';
+  const originalText = btn.innerHTML;
   btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> 處理中...';
+
+  orderCounter++;
+  localStorage.setItem('orderCounter', orderCounter);
+  const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+  const orderId = `ORD-${dateStr}-${orderCounter.toString().padStart(4, '0')}`;
+
+  const orderData = {
+    action: 'submitOrder',
+    order: {
+      orderId,
+      phone: currentPhone,
+      userName: currentUserName,
+      items: cart,
+      totalAmount: cart.reduce((sum, i) => sum + i.itemTotal, 0),
+      pickupTime,
+      timestamp: new Date().toLocaleString()
+    }
+  };
 
   try {
-    await fetch(GAS_URL, {
+    const response = await fetch(GAS_URL, {
       method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'submitOrder', order })
+      body: JSON.stringify(orderData)
     });
-  } catch (err) {
-    console.warn('GAS 呼叫失敗:', err);
+    const result = await response.json();
+
+    if (result.success) {
+      // 儲存到本地紀錄
+      const myOrders = JSON.parse(localStorage.getItem('myOrders_' + currentPhone) || '[]');
+      myOrders.push(orderData.order);
+      localStorage.setItem('myOrders_' + currentPhone, JSON.stringify(myOrders));
+      
+      showOrderSuccess(orderId);
+      cart = [];
+      updateCartBadge();
+    } else {
+      alert('下單失敗：' + result.message);
+    }
+  } catch (error) {
+    alert('網路錯誤，請稍後再試');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = originalText;
   }
+}
 
-  cart = [];
-  updateCartBadge();
-  btn.innerHTML = '確認送出訂單';
-  btn.disabled = false;
-  document.getElementById('cart-items-container').innerHTML = '';
+function showOrderSuccess(orderId) {
+  const container = document.getElementById('cart-items-container');
   document.getElementById('cart-checkout-area').style.display = 'none';
-
-  const successArea = document.getElementById('order-success-area');
-  successArea.style.display = 'block';
-  successArea.innerHTML = `
+  
+  document.getElementById('order-success-area').style.display = 'block';
+  document.getElementById('order-success-area').innerHTML = `
     <div class="success-screen">
-      <div class="success-icon">🎉</div>
-      <h3>訂單送出成功！</h3>
-      <p>已通知店家，請準時取餐</p>
+      <div class="success-icon">✅</div>
+      <h3>訂單已送出！</h3>
+      <p>請於預約時間前往自取</p>
       <div class="order-number-display">訂單編號：${orderId}</div>
-      <p>預計取餐時間：<strong>${pickupTime}</strong></p>
-      <p>總金額：<strong>$${total}</strong></p>
-      <br/>
-      <button class="btn-primary" onclick="showPanel('menu')" style="max-width:200px;margin:0 auto;">繼續點餐</button>
+      <button class="btn-primary" onclick="showPanel('orders')" style="margin-top:10px;">查看我的訂單</button>
     </div>
   `;
 }
 
-// ===== 載入訂單 (僅顯示當日) =====
-function loadOrders() {
+// ===== 訂單查詢 =====
+function renderOrders() {
   const container = document.getElementById('orders-container');
-  const saved = JSON.parse(localStorage.getItem('orders') || '[]');
+  const myOrders = JSON.parse(localStorage.getItem('myOrders_' + currentPhone) || '[]');
   
-  // 獲取今天日期的字串 (YYYY-MM-DD)
-  const todayStr = new Date().toISOString().split('T')[0];
-  
-  // 過濾條件：手機號碼正確 且 訂單日期是今天
-  const myOrders = saved.filter(o => {
-    const orderDate = o.timestamp.split('T')[0];
-    return o.phone === currentPhone && orderDate === todayStr;
-  }).reverse();
+  // 僅顯示當日訂單
+  const today = new Date().toLocaleDateString();
+  const todayOrders = myOrders.filter(o => new Date(o.timestamp).toLocaleDateString() === today);
 
-  if (myOrders.length === 0) {
-    container.innerHTML = '<div class="empty-state"><div class="empty-icon">📋</div><p>今日尚無訂單記錄</p></div>';
+  if (todayOrders.length === 0) {
+    container.innerHTML = '<div style="text-align:center; padding:40px; color:#999;">今日尚無訂單紀錄</div>';
     return;
   }
 
-  container.innerHTML = myOrders.map(o => {
-    const dt = new Date(o.timestamp);
-    const dateStr = `${dt.getMonth()+1}/${dt.getDate()} ${String(dt.getHours()).padStart(2,'0')}:${String(dt.getMinutes()).padStart(2,'0')}`;
+  container.innerHTML = todayOrders.reverse().map(o => {
     const itemsStr = o.items.map(i => {
-      let s = `${i.name}(${i.cup}) ${i.ice}`;
+      let s = `${i.name}(${i.cup}) x ${i.qty || 1} ${i.ice}`;
       if (i.extraMilk) s += '·鮮奶加量';
       s += ` $${i.itemTotal}`;
       return s;
     }).join('<br/>');
+
     return `
       <div class="order-card">
-        <div class="order-card-header">
+        <div class="order-header">
           <span class="order-id">${o.orderId}</span>
-          <span class="order-time">${dateStr}</span>
+          <span class="order-time">${o.timestamp.split(' ')[1]}</span>
         </div>
         <div class="order-pickup">⏰ 預計取餐：${o.pickupTime}</div>
         <div class="order-items">${itemsStr}</div>
-        <div class="order-total">總金額：$${o.totalAmount}</div>
+        <div class="order-total">總計：$${o.totalAmount}</div>
       </div>
     `;
   }).join('');
 }
 
-// ===== Toast 提示 =====
+// ===== 面板切換 =====
+function showPanel(panel) {
+  document.getElementById('order-screen').style.display = panel === 'menu' ? 'block' : 'none';
+  document.getElementById('cart-panel').style.display = panel === 'cart' ? 'block' : 'none';
+  document.getElementById('orders-panel').style.display = panel === 'orders' ? 'block' : 'none';
+  
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('nav-' + panel).classList.add('active');
+  
+  if (panel === 'cart') {
+    document.getElementById('order-success-area').style.display = 'none';
+    renderCart();
+  }
+  if (panel === 'orders') renderOrders();
+}
+
 function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2500);
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2500);
 }
 </script>
+
 </body>
 </html>

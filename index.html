@@ -678,8 +678,8 @@
   <div id="order-screen">
     <div class="category-tabs">
       <button class="tab-btn" onclick="filterCategory('lols', this)">蓮藕、洛神</button>
-      <button class="tab-btn" onclick="filterCategory('flower', this)">花茶</button>
-      <button class="tab-btn" onclick="filterCategory('tea', this)">茶類、冬瓜</button>
+      <button class="tab-btn" onclick="filterCategory('flower', this)">花茶類</button>
+      <button class="tab-btn" onclick="filterCategory('tea', this)">純茶類、冬瓜</button>
       <button class="tab-btn" onclick="filterCategory('other', this)">其他</button>
     </div>
     <div class="menu-section" id="menu-container"></div>
@@ -885,10 +885,10 @@ function renderMenu(items) {
   container.innerHTML = '';
   
   const categories = {
-    'lols': '🌿 蓮藕、洛神系列',
-    'flower': '🌸 花茶系列',
-    'tea': '🍵 茶類、冬瓜系列',
-    'other': '✨ 其他推薦'
+    'lols': '蓮藕、洛神系列',
+    'flower': '花草茶系列',
+    'tea': '純茶、冬瓜系列',
+    'other': '其他推薦'
   };
 
   for (let cat in categories) {

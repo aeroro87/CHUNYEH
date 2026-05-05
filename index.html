@@ -4,6 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>春葉 · 線上點餐</title>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  
   <style>
     /* ===== CSS 變數 ===== */
     :root {
@@ -791,6 +796,22 @@
 </div>
 
 <script>
+  // ===== Firebase 設定 (請替換為您的設定) =====
+const firebaseConfig = {
+    apiKey: "AIzaSyDBMBe5LPv3BiR6V_7BT4_pQp2a6QN32_Y",
+    authDomain: "chenyun-94a25.firebaseapp.com",
+    projectId: "chenyun-94a25",
+    storageBucket: "chenyun-94a25.firebasestorage.app",
+    messagingSenderId: "24863543971",
+    appId: "1:24863543971:web:489c457948aa2b02e82516",
+    measurementId: "G-3XM61XWT03"
+  };
+
+// 初始化 Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+
 // ===== 菜單資料 (支援杯裝/瓶裝獨立定價) =====
 const MENU = [
   { id: 1, name: '蓮藕茶',				cupPrice: 50, bottlePrice: 95, 	hasMilk: false, category: ['lols'], emoji: '🍵' },
@@ -837,14 +858,27 @@ function closePromo() {
   document.getElementById('promo-overlay').classList.remove('open');
 }
 
-// ===== 登入相關功能 =====
-function checkUserRecord() {
+// ===== 登入相關功能 (整合 Firebase) =====
+async function checkUserRecord() {
   const phone = document.getElementById('phone-input').value.trim();
   const nameGroup = document.getElementById('name-group');
   const nameInput = document.getElementById('name-input');
   
   if (/^09\d{8}$/.test(phone)) {
-    const savedName = localStorage.getItem('userName_' + phone);
+    // 1. 先查本地
+    let savedName = localStorage.getItem('userName_' + phone);
+    
+    // 2. 如果本地沒有，查 Firebase
+    if (!savedName) {
+      try {
+        const doc = await db.collection('users').doc(phone).get();
+        if (doc.exists) {
+          savedName = doc.data().name;
+          localStorage.setItem('userName_' + phone, savedName);
+        }
+      } catch (e) { console.error("Firebase 查詢失敗", e); }
+    }
+
     if (savedName) {
       nameGroup.style.display = 'none';
       nameInput.value = savedName;
@@ -855,28 +889,46 @@ function checkUserRecord() {
   }
 }
 
-function doLogin() {
+async function doLogin() {
   const phone = document.getElementById('phone-input').value.trim();
   const name = document.getElementById('name-input').value.trim();
+  const loginBtn = document.getElementById('login-btn');
   
   if (!/^09\d{8}$/.test(phone)) return alert('請輸入正確的手機號碼 (10位數字)');
   if (!name) return alert('請輸入您的姓名或暱稱');
   
-  currentPhone = phone;
-  currentUserName = name;
-  localStorage.setItem('userName_' + phone, name);
-  
-  document.getElementById('login-screen').style.display = 'none';
-  document.getElementById('order-screen').style.display = 'block';
-  document.getElementById('bottom-nav').style.display = 'flex';
-  document.getElementById('user-info').style.display = 'block';
-  document.getElementById('display-phone').textContent = `${name} (${phone})`;
-  
-  showPanel('menu');
-  renderMenu(MENU);
+  loginBtn.disabled = true;
+  loginBtn.innerHTML = '<span class="spinner"></span> 登入中...';
 
-  // 登入完成後顯示公告彈窗
-  document.getElementById('promo-overlay').classList.add('open');
+  try {
+    // 將資料同步到 Firebase
+    await db.collection('users').doc(phone).set({
+      name: name,
+      lastLogin: firebase.firestore.FieldValue.serverTimestamp()
+    }, { merge: true });
+
+    currentPhone = phone;
+    currentUserName = name;
+    localStorage.setItem('userName_' + phone, name);
+    
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('order-screen').style.display = 'block';
+    document.getElementById('bottom-nav').style.display = 'flex';
+    document.getElementById('user-info').style.display = 'block';
+    document.getElementById('display-phone').textContent = `${name} (${phone})`;
+    
+    showPanel('menu');
+    renderMenu(MENU);
+
+    // 登入完成後顯示公告彈窗
+    document.getElementById('promo-overlay').classList.add('open');
+  } catch (e) {
+    alert('雲端同步失敗，請檢查網路連線');
+    console.error(e);
+  } finally {
+    loginBtn.disabled = false;
+    loginBtn.textContent = '進入點餐';
+  }
 }
 
 // ===== 菜單渲染 =====

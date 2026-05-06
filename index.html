@@ -814,28 +814,28 @@ const db = firebase.firestore();
 
 // ===== 菜單資料 (支援杯裝/瓶裝獨立定價) =====
 const MENU = [
-  { id: 1, name: '蓮藕茶',				cupPrice: 50, bottlePrice: 95, 	hasMilk: false, category: ['lols'], emoji: '🍵' },
-  { id: 2, name: '蓮藕鮮奶',				cupPrice: 60, bottlePrice: 105, hasMilk: true,  category: ['lols'], emoji: '🥛' },
-  { id: 3, name: '洛神花茶',				cupPrice: 50, bottlePrice: 90, 	hasMilk: false, category: ['lols'], emoji: '🌺' },
-  { id: 4, name: '洛神冬瓜',				cupPrice: 50, bottlePrice: 90, 	hasMilk: false, category: ['lols'], emoji: '🥤' },
-  { id: 5, name: '古早味紅茶',			cupPrice: 30, bottlePrice: 65, 	hasMilk: false, category: ['tea'], emoji: '🍂' },
-  { id: 6, name: '紅茶鮮奶',				cupPrice: 50, bottlePrice: 85, 	hasMilk: true, 	category: ['tea'], emoji: '🧋' },
-  { id: 7, name: '高山烏龍茶（無糖）',		cupPrice: 35, bottlePrice: 70, 	hasMilk: false, category: ['tea'], emoji: '⛰️' },
-  { id: 8, name: '烏龍綠茶（無糖）',		cupPrice: 35, bottlePrice: 70, 	hasMilk: false, category: ['tea'], emoji: '🍃' },
-  { id: 9, name: '烏龍鮮奶（無糖）',		cupPrice: 55, bottlePrice: 85, 	hasMilk: true, 	category: ['tea'], emoji: '🐮' },
-  { id: 10,name: '薰衣草茶',				cupPrice: 45, bottlePrice: 90, 	hasMilk: false, category: ['flower'], emoji: '💜' },
-  { id: 11,name: '薰衣草紅茶',			cupPrice: 45, bottlePrice: 90, 	hasMilk: false, category: ['flower'], emoji: '🍵' },
-  { id: 12,name: '薰衣草鮮奶茶(含紅茶)',	cupPrice: 55, bottlePrice: 95, 	hasMilk: true, 	category: ['flower'], emoji: '🥛' },
-  { id: 13,name: '薰衣草鮮奶',			cupPrice: 60, bottlePrice: 105, hasMilk: true, 	category: ['flower'], emoji: '🐮' },
-  { id: 14,name: '玫瑰花茶',				cupPrice: 60, bottlePrice: 105, hasMilk: false, category: ['flower'], emoji: '🌹' },
-  { id: 15,name: '玫瑰洛神',				cupPrice: 60, bottlePrice: 105, hasMilk: false, category: ['flower'], emoji: '🍷' },
-  { id: 16,name: '玫瑰鮮奶茶（含紅茶）',	cupPrice: 65, bottlePrice: 115, hasMilk: true,  category: ['flower'], emoji: '🥛' },
-  { id: 17,name: '玫瑰鮮奶',				cupPrice: 70, bottlePrice: 120, hasMilk: true,  category: ['flower'], emoji: '🐮' },
-  { id: 18,name: '無糖綠茶',				cupPrice: 30, bottlePrice: 65, 	hasMilk: false, category: ['tea'], emoji: '🍵' },
-  { id: 19,name: '綠茶鮮奶（無糖）',		cupPrice: 50, bottlePrice: 85, 	hasMilk: true, 	category: ['tea'], emoji: '🥛' },
-  { id: 20,name: '甘露冬瓜茶',			cupPrice: 30, bottlePrice: 60, 	hasMilk: false, category: ['tea'], emoji: '🥤' },
-  { id: 21,name: '冬瓜綠茶',				cupPrice: 30, bottlePrice: 60, 	hasMilk: false, category: ['tea'], emoji: '🍃' },
-  { id: 22,name: '冬瓜鮮奶',				cupPrice: 50, bottlePrice: 85, 	hasMilk: true, 	category: ['tea'], emoji: '🐮' },
+  { id: 1, name: '蓮藕茶', cupPrice: 50, bottlePrice: 95, hasMilk: false, category: ['lols']},
+  { id: 2, name: '蓮藕鮮奶', cupPrice: 60, bottlePrice: 105, hasMilk: true, category: ['lols']},
+  { id: 3, name: '洛神花茶', cupPrice: 50, bottlePrice: 90, hasMilk: false, category: ['lols']},
+  { id: 4, name: '洛神冬瓜', cupPrice: 50, bottlePrice: 90, hasMilk: false, category: ['lols','d']},
+  { id: 5, name: '古早味紅茶', cupPrice: 30, bottlePrice: 65, hasMilk: false, category: ['tea','red']},
+  { id: 6, name: '紅茶鮮奶', cupPrice: 50, bottlePrice: 85, hasMilk: true, category: ['tea','red']},
+  { id: 7, name: '高山烏龍茶（無糖）', cupPrice: 35, bottlePrice: 70, hasMilk: false, category: ['tea','ol']},
+  { id: 8, name: '烏龍綠茶（無糖）', cupPrice: 35, bottlePrice: 70, hasMilk: false, category: ['tea','ol','green']},
+  { id: 9, name: '烏龍鮮奶（無糖）', cupPrice: 55, bottlePrice: 85, hasMilk: true, category: ['tea','ol']},
+  { id: 10,name: '薰衣草茶', cupPrice: 45, bottlePrice: 90, hasMilk: false, category: ['flower','se']},
+  { id: 11,name: '薰衣草紅茶', cupPrice: 45, bottlePrice: 90, hasMilk: false, category: ['flower','se']},
+  { id: 12,name: '薰衣草鮮奶茶(含紅茶)', cupPrice: 55, bottlePrice: 95, hasMilk: true, category: ['flower','se']},
+  { id: 13,name: '薰衣草鮮奶', cupPrice: 60, bottlePrice: 105, hasMilk: true, category: ['flower','se']},
+  { id: 14,name: '玫瑰花茶', cupPrice: 60, bottlePrice: 105, hasMilk: false, category: ['flower','ros']},
+  { id: 15,name: '玫瑰洛神', cupPrice: 60, bottlePrice: 105, hasMilk: false, category: ['flower','ros']},
+  { id: 16,name: '玫瑰鮮奶茶（含紅茶）', cupPrice: 65, bottlePrice: 115, hasMilk: true, category: ['flower','ros']},
+  { id: 17,name: '玫瑰鮮奶', cupPrice: 70, bottlePrice: 120, hasMilk: true, category: ['flower','ros']},
+  { id: 18,name: '無糖綠茶', cupPrice: 30, bottlePrice: 65, hasMilk: false, category: ['tea','green']},  
+  { id: 19,name: '綠茶鮮奶（無糖）', cupPrice: 50, bottlePrice: 85, hasMilk: true, category: ['tea','green']},
+  { id: 20,name: '甘露冬瓜茶', cupPrice: 30, bottlePrice: 60, hasMilk: false, category: ['tea','d']},
+  { id: 21,name: '綠茶冬瓜', cupPrice: 30, bottlePrice: 60, hasMilk: false, category: ['tea','green','d']},
+  { id: 22,name: '冬瓜鮮奶', cupPrice: 50, bottlePrice: 85, hasMilk: true, category: ['tea','d']}
 ];
 
 // ===== Google Apps Script 網址 =====
@@ -936,12 +936,16 @@ function renderMenu(items) {
   const container = document.getElementById('menu-container');
   container.innerHTML = '';
   
-  const categories = {
-    'lols': '蓮藕、洛神系列',
-    'flower': '花草茶系列',
-    'tea': '純茶、冬瓜系列',
-    'other': '其他推薦'
-  };
+  const categories = { 'lols': '蓮藕、洛神系列（無咖啡因）',
+   					   'se': '薰衣草（無咖啡因）', 
+   					   'ros': '玫瑰花（無咖啡因）', 
+   					   'red': '古早味紅茶',
+   					   'green': '無糖綠茶',
+   					   'ol': '高山烏龍茶',
+   					   'd': '冬瓜茶（無咖啡因）',
+    				   'tb': '茶包',
+    				   'mg': '梅有芒果'
+    };
 
   for (let cat in categories) {
     const catItems = items.filter(i => i.category.includes(cat));

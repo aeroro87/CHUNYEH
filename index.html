@@ -47,14 +47,14 @@
       box-shadow: 0 2px 12px var(--shadow);
     }
     .logo {
-      font-size: 1.4rem;
+      font-size: 2rem;
       font-weight: 700;
       color: var(--brown);
       letter-spacing: 0.05em;
     }
     .logo span { color: var(--tan); }
     #user-info {
-      font-size: 0.85rem;
+      font-size: 1rem;
       color: var(--brown);
       display: none;
     }
@@ -82,15 +82,15 @@
       text-align: center;
     }
     .login-card .icon { 
-      width: 80px; 
-      height: 80px; 
+      width: 100px; 
+      height: 100px; 
       margin: 0 auto 15px;
       border-radius: 50%;
       overflow: hidden;
       border: 3px solid var(--almond);
     }
     .login-card .icon img {
-      width: 100%;
+      width: 95%;
       height: 100%;
       object-fit: cover;
     }
@@ -126,6 +126,7 @@
     }
     .btn-primary:hover { background: var(--dark); }
     .btn-primary:active { transform: scale(0.98); }
+    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
 
     /* ===== 點餐畫面 ===== */
     #order-screen { display: none; }
@@ -214,16 +215,6 @@
     .price-tag .val {
       color: var(--tan);
       font-weight: 700;
-    }
-    .drink-tag {
-      display: inline-block;
-      font-size: 0.7rem;
-      background: var(--almond);
-      color: var(--brown);
-      padding: 2px 6px;
-      border-radius: 4px;
-      margin-top: 6px;
-      align-self: flex-start;
     }
     .add-icon {
       position: absolute;
@@ -662,8 +653,7 @@
 <div id="login-screen">
   <div class="login-card">
     <div class="icon">
-      <!-- 您可以在此替換 src 為您的 Logo 圖片網址 -->
-      <img src="https://github.com/aeroro87/CHUNYEH/blob/main/春葉logo.pdf.png?raw=true" alt="Logo" id="login-logo">
+      <img src="https://github.com/aeroro87/CHUNYEH/blob/main/IMG_9192.jpg?raw=true" alt="Logo" id="login-logo">
     </div>
     <h2>歡迎光臨</h2>
     <p>請輸入手機號碼以開始點餐</p>
@@ -682,9 +672,10 @@
   <!-- 菜單 -->
   <div id="order-screen">
     <div class="category-tabs">
+      <button class="tab-btn active" onclick="filterCategory('all', this)">全部</button>
       <button class="tab-btn" onclick="filterCategory('lols', this)">蓮藕、洛神</button>
       <button class="tab-btn" onclick="filterCategory('flower', this)">花茶類</button>
-      <button class="tab-btn" onclick="filterCategory('tea', this)">純茶類、冬瓜</button>
+      <button class="tab-btn" onclick="filterCategory('tea', this)">純茶、冬瓜</button>
       <button class="tab-btn" onclick="filterCategory('other', this)">其他</button>
     </div>
     <div class="menu-section" id="menu-container"></div>
@@ -740,41 +731,31 @@
       <span class="modal-drink-emoji" id="modal-emoji">🧋</span>
       <div>
         <div class="modal-drink-name" id="modal-name">飲品名稱</div>
-        <div class="modal-drink-price" id="modal-price">杯裝 $0 / 瓶裝 $0</div>
+        <div class="modal-drink-price" id="modal-price">價格資訊</div>
       </div>
     </div>
 
-    <!-- 杯裝/瓶裝 -->
-    <div class="option-group">
+    <!-- 杯裝/瓶裝 (僅在有 cupPrice 時顯示) -->
+    <div class="option-group" id="container-option-group">
       <div class="option-label">🥤 容器選擇 </div>
-      <div class="option-buttons" id="modal-cup-options">
-        <!-- JS 動態生成 -->
-      </div>
+      <div class="option-buttons" id="modal-cup-options"></div>
     </div>
 
-    <!-- 冰塊 -->
-    <div class="option-group">
+    <!-- 冰塊 (僅在非單一價格商品時顯示) -->
+    <div class="option-group" id="ice-option-group">
       <div class="option-label">🧊 冰塊選擇 </div>
       <div class="option-buttons" id="modal-ice-options">
-        <button class="opt-btn selected" data-group="ice" data-value="有冰" onclick="selectOpt(this)">
-          有冰
-        </button>
-        <button class="opt-btn" data-group="ice" data-value="去冰" onclick="selectOpt(this)">
-          去冰
-        </button>
+        <button class="opt-btn selected" data-group="ice" data-value="有冰" onclick="selectOpt(this)">有冰</button>
+        <button class="opt-btn" data-group="ice" data-value="去冰" onclick="selectOpt(this)">去冰</button>
       </div>
     </div>
 
-    <!-- 鮮奶加量（僅含牛奶飲品顯示） -->
+    <!-- 鮮奶加量 -->
     <div class="option-group" id="milk-option" style="display:none;">
       <div class="option-label">🥛 鮮奶加量 <span class="badge">+$5</span></div>
       <div class="option-buttons">
-        <button class="opt-btn selected" data-group="extraMilk" data-value="不加" onclick="selectOpt(this)">
-          不加
-        </button>
-        <button class="opt-btn" data-group="extraMilk" data-value="加量" onclick="selectOpt(this)">
-          加量<div class="opt-extra">+$5</div>
-        </button>
+        <button class="opt-btn selected" data-group="extraMilk" data-value="不加" onclick="selectOpt(this)">不加</button>
+        <button class="opt-btn" data-group="extraMilk" data-value="加量" onclick="selectOpt(this)">加量<div class="opt-extra">+$5</div></button>
       </div>
     </div>
 
@@ -796,23 +777,23 @@
 </div>
 
 <script>
-  // ===== Firebase 設定 (請替換為您的設定) =====
+// ===== Firebase 設定 (請替換為您的設定) =====
 const firebaseConfig = {
-    apiKey: "AIzaSyDBMBe5LPv3BiR6V_7BT4_pQp2a6QN32_Y",
-    authDomain: "chenyun-94a25.firebaseapp.com",
-    projectId: "chenyun-94a25",
-    storageBucket: "chenyun-94a25.firebasestorage.app",
-    messagingSenderId: "24863543971",
-    appId: "1:24863543971:web:489c457948aa2b02e82516",
-    measurementId: "G-3XM61XWT03"
-  };
+  apiKey: "AIzaSyDBMBe5LPv3BiR6V_7BT4_pQp2a6QN32_Y",
+  authDomain: "chenyun-94a25.firebaseapp.com",
+  projectId: "chenyun-94a25",
+  storageBucket: "chenyun-94a25.firebasestorage.app",
+  messagingSenderId: "24863543971",
+  appId: "1:24863543971:web:489c457948aa2b02e82516",
+  measurementId: "G-3XM61XWT03"
+};
 
 // 初始化 Firebase
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-
-// ===== 菜單資料 (支援杯裝/瓶裝獨立定價) =====
+// ===== 菜單資料 =====
+// 提示：若為無子項目商品，請只設定 price，不要設定 cupPrice/bottlePrice
 const MENU = [
   { id: 1, name: '蓮藕茶', cupPrice: 50, bottlePrice: 95, hasMilk: false, category: ['lols']},
   { id: 2, name: '蓮藕鮮奶', cupPrice: 60, bottlePrice: 105, hasMilk: true, category: ['lols']},
@@ -835,11 +816,18 @@ const MENU = [
   { id: 19,name: '綠茶鮮奶（無糖）', cupPrice: 50, bottlePrice: 85, hasMilk: true, category: ['tea','green']},
   { id: 20,name: '甘露冬瓜茶', cupPrice: 30, bottlePrice: 60, hasMilk: false, category: ['tea','d']},
   { id: 21,name: '綠茶冬瓜', cupPrice: 30, bottlePrice: 60, hasMilk: false, category: ['tea','green','d']},
-  { id: 22,name: '冬瓜鮮奶', cupPrice: 50, bottlePrice: 85, hasMilk: true, category: ['tea','d']}
+  { id: 22,name: '冬瓜鮮奶', cupPrice: 50, bottlePrice: 85, hasMilk: true, category: ['tea','d']},
+  // 單一價格商品範例
+  
+  { id: 101, name: '薰衣草茶包', price: 180, category: ['other','tb']},
+  { id: 102, name: '薰衣草茶包X2', price: 350, category: ['other','tb']},
+  { id: 103, name: '玫瑰花茶包', price: 180, category: ['other','tb']},
+  { id: 104, name: '玫瑰花茶包X2', price: 350, category: ['other','tb']},
+  { id: 105, name: '薰衣草＋玫瑰花 茶包', price: 350, category: ['other','tb']},
+  { id: 106, name: '梅有芒果', price: 150, category: ['other','mg']}
 ];
 
-// ===== Google Apps Script 網址 =====
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbwNJZ_y5bug9xxtfJQ0cSwf14QY9qw2ST_tJwU2fA51qCAyc8Xn51oVZI2rPcm0XPk4/exec'
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbxcpJHNgogEzn6O5AZ87Ii1xu1ffiMSce_W25-qXCj0ojSG_w6PJ01stQ96czSUdBLV/exec';
 
 // ===== 狀態 =====
 let currentPhone = '';
@@ -847,12 +835,9 @@ let currentUserName = '';
 let cart = [];
 let currentDrink = null;
 let currentOptions = { cup: '杯裝', ice: '有冰', extraMilk: '不加', qty: 1 };
-let orderCounter = parseInt(localStorage.getItem('orderCounter') || '0');
 
 // ===== 初始化 =====
-window.onload = function() {
-  // 移除首頁自動彈窗邏輯
-};
+window.onload = function() {};
 
 function closePromo() {
   document.getElementById('promo-overlay').classList.remove('open');
@@ -865,10 +850,7 @@ async function checkUserRecord() {
   const nameInput = document.getElementById('name-input');
   
   if (/^09\d{8}$/.test(phone)) {
-    // 1. 先查本地
     let savedName = localStorage.getItem('userName_' + phone);
-    
-    // 2. 如果本地沒有，查 Firebase
     if (!savedName) {
       try {
         const doc = await db.collection('users').doc(phone).get();
@@ -901,7 +883,6 @@ async function doLogin() {
   loginBtn.innerHTML = '<span class="spinner"></span> 登入中...';
 
   try {
-    // 將資料同步到 Firebase
     await db.collection('users').doc(phone).set({
       name: name,
       lastLogin: firebase.firestore.FieldValue.serverTimestamp()
@@ -919,8 +900,6 @@ async function doLogin() {
     
     showPanel('menu');
     renderMenu(MENU);
-
-    // 登入完成後顯示公告彈窗
     document.getElementById('promo-overlay').classList.add('open');
   } catch (e) {
     alert('雲端同步失敗，請檢查網路連線');
@@ -935,7 +914,6 @@ async function doLogin() {
 function renderMenu(items) {
   const container = document.getElementById('menu-container');
   container.innerHTML = '';
-  
   const categories = { 'lols': '蓮藕、洛神系列（無咖啡因）',
    					   'se': '薰衣草（無咖啡因）', 
    					   'ros': '玫瑰花（無咖啡因）', 
@@ -950,22 +928,27 @@ function renderMenu(items) {
   for (let cat in categories) {
     const catItems = items.filter(i => i.category.includes(cat));
     if (catItems.length === 0) continue;
-
     const section = document.createElement('div');
     section.className = 'menu-section';
     section.innerHTML = `
       <div class="section-title">${categories[cat]}</div>
       <div class="menu-grid">
-        ${catItems.map(item => `
-          <div class="drink-card" onclick="openModal(${item.id})">
-            <div class="add-icon">+</div>
-            <div class="drink-name"> ${item.name}</div>
-            <div class="drink-prices">
-              <div class="price-tag"><span>杯裝</span><span class="val">$${item.cupPrice}</span></div>
-              <div class="price-tag"><span>瓶裝</span><span class="val">$${item.bottlePrice}</span></div>
+        ${catItems.map(item => {
+          const isSinglePrice = item.price !== undefined;
+          return `
+            <div class="drink-card" onclick="openModal(${item.id})">
+              <div class="add-icon">+</div>
+              <div class="drink-name">${item.name}</div>
+              <div class="drink-prices">
+                ${isSinglePrice ? 
+                  `<div class="price-tag"><span>售價</span><span class="val">$${item.price}</span></div>` :
+                  `<div class="price-tag"><span>杯裝</span><span class="val">$${item.cupPrice}</span></div>
+                   <div class="price-tag"><span>瓶裝</span><span class="val">$${item.bottlePrice}</span></div>`
+                }
+              </div>
             </div>
-          </div>
-        `).join('')}
+          `;
+        }).join('')}
       </div>
     `;
     container.appendChild(section);
@@ -975,43 +958,48 @@ function renderMenu(items) {
 function filterCategory(cat, btn) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  
-  if (cat === 'all') {
-    renderMenu(MENU);
-  } else {
-    const filtered = MENU.filter(i => i.category.includes(cat));
-    renderMenu(filtered);
-  }
+  renderMenu(cat === 'all' ? MENU : MENU.filter(i => i.category.includes(cat)));
 }
 
 // ===== 客製選項彈窗 =====
 function openModal(id) {
   currentDrink = MENU.find(d => d.id === id);
-  currentOptions = { cup: '杯裝', ice: '有冰', extraMilk: '不加', qty: 1 };
+  const isSinglePrice = currentDrink.price !== undefined;
+  
+  // 初始化選項
+  currentOptions = { cup: isSinglePrice ? '單一價格' : '杯裝', ice: '有冰', extraMilk: '不加', qty: 1 };
   document.getElementById('modal-qty').textContent = '1';
-
   document.getElementById('modal-emoji').textContent = currentDrink.emoji;
   document.getElementById('modal-name').textContent = currentDrink.name;
-  document.getElementById('modal-price').textContent = `杯裝 $${currentDrink.cupPrice} / 瓶裝 $${currentDrink.bottlePrice}`;
+  
+  // 顯示價格資訊
+  document.getElementById('modal-price').textContent = isSinglePrice ? 
+    `售價 $${currentDrink.price}` : 
+    `杯裝 $${currentDrink.cupPrice} / 瓶裝 $${currentDrink.bottlePrice}`;
 
-  const cupContainer = document.getElementById('modal-cup-options');
-  cupContainer.innerHTML = `
-    <button class="opt-btn selected" data-group="cup" data-value="杯裝" onclick="selectOpt(this)">
-      杯裝<div class="opt-extra">$${currentDrink.cupPrice}</div>
-    </button>
-    <button class="opt-btn" data-group="cup" data-value="瓶裝" onclick="selectOpt(this)">
-      瓶裝<div class="opt-extra">$${currentDrink.bottlePrice}</div>
-    </button>
-  `;
+  // 容器選擇顯示邏輯
+  const containerGroup = document.getElementById('container-option-group');
+  if (isSinglePrice) {
+    containerGroup.style.display = 'none';
+    document.getElementById('ice-option-group').style.display = 'none';
+  } else {
+    containerGroup.style.display = 'block';
+    document.getElementById('ice-option-group').style.display = 'block';
+    const cupContainer = document.getElementById('modal-cup-options');
+    cupContainer.innerHTML = `
+      <button class="opt-btn selected" data-group="cup" data-value="杯裝" onclick="selectOpt(this)">杯裝<div class="opt-extra">$${currentDrink.cupPrice}</div></button>
+      <button class="opt-btn" data-group="cup" data-value="瓶裝" onclick="selectOpt(this)">瓶裝<div class="opt-extra">$${currentDrink.bottlePrice}</div></button>
+    `;
+  }
 
+  // 鮮奶加量顯示邏輯
   document.getElementById('milk-option').style.display = currentDrink.hasMilk ? 'block' : 'none';
   
   // 重置冰塊選項樣式
   const iceBtns = document.querySelectorAll('#modal-ice-options .opt-btn');
   iceBtns.forEach(b => {
     b.disabled = false;
-    b.classList.remove('selected');
-    if(b.dataset.value === '有冰') b.classList.add('selected');
+    b.classList.toggle('selected', b.dataset.value === '有冰');
   });
 
   updateModalPrice();
@@ -1019,30 +1007,22 @@ function openModal(id) {
 }
 
 function closeModal(e) {
-  if (e.target.id === 'drink-modal' || e.target.className === 'modal-handle') {
-    document.getElementById('drink-modal').classList.remove('open');
-  }
+  if (e.target.id === 'drink-modal' || e.target.className === 'modal-handle') document.getElementById('drink-modal').classList.remove('open');
 }
 
 function selectOpt(btn) {
   const group = btn.dataset.group;
   const val = btn.dataset.value;
-  
-  // 瓶裝鎖定去冰邏輯
   if (group === 'cup') {
     const iceBtns = document.querySelectorAll('#modal-ice-options .opt-btn');
     if (val === '瓶裝') {
       currentOptions.ice = '去冰';
       iceBtns.forEach(b => {
-        b.classList.remove('selected');
-        if (b.dataset.value === '去冰') b.classList.add('selected');
+        b.classList.toggle('selected', b.dataset.value === '去冰');
         if (b.dataset.value === '有冰') b.disabled = true;
       });
-    } else {
-      iceBtns.forEach(b => b.disabled = false);
-    }
+    } else { iceBtns.forEach(b => b.disabled = false); }
   }
-
   document.querySelectorAll(`.opt-btn[data-group="${group}"]`).forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
   currentOptions[group] = val;
@@ -1057,18 +1037,37 @@ function updateQty(delta) {
 
 function updateModalPrice() {
   if (!currentDrink) return;
-  let base = currentOptions.cup === '瓶裝' ? currentDrink.bottlePrice : currentDrink.cupPrice;
+  let base = 0;
+  if (currentDrink.price !== undefined) {
+    base = currentDrink.price;
+  } else {
+    base = currentOptions.cup === '瓶裝' ? currentDrink.bottlePrice : currentDrink.cupPrice;
+  }
   if (currentOptions.extraMilk === '加量') base += 5;
-  let total = base * currentOptions.qty;
-  document.getElementById('modal-add-price').textContent = `$${total}`;
+  document.getElementById('modal-add-price').textContent = `$${base * currentOptions.qty}`;
 }
 
-// ===== 購物車與訂單邏輯 (Firebase 整合) =====
+// ===== 購物車與訂單邏輯 =====
 function addToCart() {
   if (!currentDrink) return;
-  let basePrice = currentOptions.cup === '瓶裝' ? currentDrink.bottlePrice : currentDrink.cupPrice;
+  const isSingle = currentDrink.price !== undefined;
+  let basePrice = isSingle ? currentDrink.price : (currentOptions.cup === '瓶裝' ? currentDrink.bottlePrice : currentDrink.cupPrice);
   let unitTotal = basePrice + (currentOptions.extraMilk === '加量' ? 5 : 0);
-  cart.push({ id: Date.now(), drinkId: currentDrink.id, name: currentDrink.name, emoji: currentDrink.emoji, price: basePrice, cup: currentOptions.cup, ice: currentOptions.ice, extraMilk: currentOptions.extraMilk === '加量', qty: currentOptions.qty, unitTotal: unitTotal, itemTotal: unitTotal * currentOptions.qty });
+  
+  cart.push({ 
+    id: Date.now(), 
+    drinkId: currentDrink.id, 
+    name: currentDrink.name, 
+    emoji: currentDrink.emoji || '', 
+    price: basePrice, 
+    cup: isSingle ? '' : (currentOptions.cup || ''), 
+    ice: isSingle ? '' : (currentOptions.ice || ''), 
+    extraMilk: currentOptions.extraMilk === '加量', 
+    qty: currentOptions.qty || 1, 
+    unitTotal: unitTotal, 
+    itemTotal: unitTotal * (currentOptions.qty || 1)
+  });
+  
   updateCartBadge();
   document.getElementById('drink-modal').classList.remove('open');
   showToast(`已加入：${currentDrink.name} x ${currentOptions.qty}`);
@@ -1087,10 +1086,9 @@ function renderCart() {
   if (cart.length === 0) { container.innerHTML = '<div style="text-align:center; padding:40px; color:#999;">購物車是空的</div>'; checkoutArea.style.display = 'none'; return; }
   container.innerHTML = cart.map(item => `
     <div class="cart-item">
-      <span style="font-size:1.5rem;">${item.emoji}</span>
       <div class="cart-item-info">
-        <div class="cart-item-name">${item.name} (${item.cup}) x ${item.qty}</div>
-        <div class="cart-item-opts">${item.ice}${item.extraMilk ? ' · 鮮奶加量' : ''}</div>
+        <div class="cart-item-name">${item.name} ${item.cup ? `(${item.cup})` : ''} x ${item.qty}</div>
+        <div class="cart-item-opts">${item.ice ? item.ice : ''}${item.extraMilk ? (item.ice ? ' · ' : '') + '鮮奶加量' : ''}</div>
       </div>
       <div class="cart-item-price">$${item.itemTotal}</div>
       <button class="cart-item-remove" onclick="removeFromCart(${item.id})">✕</button>
@@ -1131,7 +1129,6 @@ async function submitOrder() {
   const originalText = btn.innerHTML;
   btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> 處理中...';
   
-  // 生成唯一訂單編號 (時間戳 + 隨機碼)
   const orderId = `ORD-${Date.now().toString().slice(-8)}-${Math.floor(Math.random()*1000).toString().padStart(3, '0')}`;
   const orderData = {
     orderId,
@@ -1145,18 +1142,32 @@ async function submitOrder() {
   };
 
   try {
-    // 1. 寫入 Firebase
+    console.log("正在嘗試寫入 Firebase...", orderData);
     await db.collection('orders').doc(orderId).set(orderData);
+    console.log("Firebase 寫入成功");
     
-    // 2. 同步發送 GAS (LINE 通知)
-    fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ action: 'submitOrder', order: { ...orderData, timestamp: orderData.displayTime } }) });
+    if (GAS_URL && GAS_URL !== 'YOUR_GAS_WEB_APP_URL') {
+      console.log("正在發送 LINE 通知...");
+      fetch(GAS_URL, { 
+        method: 'POST', 
+        mode: 'no-cors',
+        cache: 'no-cache',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'submitOrder', order: { ...orderData, timestamp: orderData.displayTime } }) 
+      }).then(() => console.log("LINE 通知已發送 (no-cors 模式)"));
+    }
     
     showOrderSuccess(orderId);
     cart = [];
     updateCartBadge();
+    renderCart(); // 💡 關鍵：立即重新渲染購物車介面，顯示「購物車是空的」
   } catch (e) {
-    alert('下單失敗，請檢查網路連線');
-    console.error(e);
+    console.error("下單過程出錯:", e);
+    let errorMsg = '下單失敗，原因：' + (e.message || '未知錯誤');
+    if (e.message && e.message.includes('permission-denied')) {
+      errorMsg = '下單失敗：Firebase 資料庫權限不足，請檢查 Rules 設定。';
+    }
+    alert(errorMsg);
   } finally {
     btn.disabled = false;
     btn.innerHTML = originalText;
@@ -1174,10 +1185,8 @@ async function renderOrders() {
   container.innerHTML = '<div style="text-align:center; padding:40px;"><span class="spinner" style="border-top-color:var(--tan);"></span> 載入中...</div>';
   
   try {
-    // 從 Firebase 抓取當日訂單
     const today = new Date();
     today.setHours(0,0,0,0);
-    
     const snapshot = await db.collection('orders')
       .where('phone', '==', currentPhone)
       .where('timestamp', '>=', today)
@@ -1195,7 +1204,7 @@ async function renderOrders() {
         <div class="order-card">
           <div class="order-header"><span class="order-id">${o.orderId}</span><span class="order-time">${o.displayTime.split(' ')[1]}</span></div>
           <div class="order-pickup">⏰ 預計取餐：${o.pickupTime}</div>
-          <div class="order-items">${o.items.map(i => `${i.name}(${i.cup}) x ${i.qty} ${i.ice}${i.extraMilk ? '·鮮奶加量' : ''} $${i.itemTotal}`).join('<br/>')}</div>
+          <div class="order-items">${o.items.map(i => `${i.name}${i.cup ? `(${i.cup})` : ''} x ${i.qty} ${i.ice ? i.ice : ''}${i.extraMilk ? '·鮮奶加量' : ''} $${i.itemTotal}`).join('<br/>')}</div>
           <div class="order-total">總計：$${o.totalAmount}</div>
         </div>
       `;

@@ -672,8 +672,7 @@
   <!-- 菜單 -->
   <div id="order-screen">
     <div class="category-tabs">
-      <button class="tab-btn active" onclick="filterCategory('all', this)">全部</button>
-      <button class="tab-btn" onclick="filterCategory('lols', this)">蓮藕、洛神</button>
+      <button class="tab-btn active" id="default-tab" onclick="filterCategory('lols', this)">蓮藕、洛神</button>
       <button class="tab-btn" onclick="filterCategory('flower', this)">花茶類</button>
       <button class="tab-btn" onclick="filterCategory('tea', this)">純茶、冬瓜</button>
       <button class="tab-btn" onclick="filterCategory('other', this)">其他</button>
@@ -798,7 +797,7 @@ const MENU = [
   { id: 1, name: '蓮藕茶', cupPrice: 50, bottlePrice: 95, hasMilk: false, category: ['lols']},
   { id: 2, name: '蓮藕鮮奶', cupPrice: 60, bottlePrice: 105, hasMilk: true, category: ['lols']},
   { id: 3, name: '洛神花茶', cupPrice: 50, bottlePrice: 90, hasMilk: false, category: ['lols']},
-  { id: 4, name: '洛神冬瓜', cupPrice: 50, bottlePrice: 90, hasMilk: false, category: ['lols','d']},
+  { id: 4, name: '洛神冬瓜', cupPrice: 50, bottlePrice: 90, hasMilk: false, category: ['lols']},
   { id: 5, name: '古早味紅茶', cupPrice: 30, bottlePrice: 65, hasMilk: false, category: ['tea','red']},
   { id: 6, name: '紅茶鮮奶', cupPrice: 50, bottlePrice: 85, hasMilk: true, category: ['tea','red']},
   { id: 7, name: '高山烏龍茶（無糖）', cupPrice: 35, bottlePrice: 70, hasMilk: false, category: ['tea','ol']},
@@ -899,7 +898,9 @@ async function doLogin() {
     document.getElementById('display-phone').textContent = `${name} (${phone})`;
     
     showPanel('menu');
-    renderMenu(MENU);
+    // 預設顯示蓮藕、洛神
+    const defaultTab = document.getElementById('default-tab');
+    filterCategory('lols', defaultTab);
     document.getElementById('promo-overlay').classList.add('open');
   } catch (e) {
     alert('雲端同步失敗，請檢查網路連線');
@@ -958,7 +959,13 @@ function renderMenu(items) {
 function filterCategory(cat, btn) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  renderMenu(cat === 'all' ? MENU : MENU.filter(i => i.category.includes(cat)));
+  
+  // 動態切換顯示內容
+  const filteredItems = MENU.filter(i => i.category.includes(cat));
+  renderMenu(filteredItems);
+  
+  // 自動捲動到上方
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // ===== 客製選項彈窗 =====

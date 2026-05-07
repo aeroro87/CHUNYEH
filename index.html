@@ -836,7 +836,11 @@ let currentDrink = null;
 let currentOptions = { cup: '杯裝', ice: '有冰', extraMilk: '不加', qty: 1 };
 
 // ===== 初始化 =====
-window.onload = function() {};
+window.onload = function() {
+// 每次開啟網頁時清除本地儲存的資訊 (LocalStorage)
+  localStorage.clear();
+  console.log('本地儲存空間已清空，請重新登入');
+};
 
 function closePromo() {
   document.getElementById('promo-overlay').classList.remove('open');

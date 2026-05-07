@@ -642,7 +642,7 @@
 
 <!-- ===== Header ===== -->
 <header>
-  <div class="logo">春葉手作茶飲 <span>·</span> 線上點餐</div>
+  <div class="logo">春葉手作茶飲</div>
   <div id="user-info">您好，<strong id="display-phone"></strong></div>
 </header>
 
@@ -899,7 +899,7 @@ async function doLogin() {
     document.getElementById('order-screen').style.display = 'block';
     document.getElementById('bottom-nav').style.display = 'flex';
     document.getElementById('user-info').style.display = 'block';
-    document.getElementById('display-phone').textContent = `${name} (${phone})`;
+    document.getElementById('display-phone').textContent = `${name}`;
     
     showPanel('menu');
     // 預設顯示蓮藕、洛神

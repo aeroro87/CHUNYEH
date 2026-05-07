@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>春葉 · 線上點餐</title>
 
+  <!-- Google Fonts: Noto Sans TC -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+  
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
@@ -12,56 +15,60 @@
   <style>
     /* ===== CSS 變數 ===== */
     :root {
-      --cream:    #f5efe6;
-      --almond:   #e8d9c5;
-      --tan:      #c9a97a;
-      --brown:    #7a5c3a;
-      --dark:     #3e2c1a;
-      --white:    #fffdf9;
-      --shadow:   rgba(122, 92, 58, 0.15);
-      --radius:   14px;
-      --trans:    0.22s ease;
+      --cream:    #f8f4ef;
+      --almond:   #ede0d4;
+      --tan:      #b08968;
+      --brown:    #7f5539;
+      --dark:     #432818;
+      --white:    #ffffff;
+      --shadow:   rgba(67, 40, 24, 0.08);
+      --shadow-lg: rgba(67, 40, 24, 0.15);
+      --radius:   16px;
+      --radius-sm: 10px;
+      --trans:    0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     /* ===== 基礎重設 ===== */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
     body {
-      font-family: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+      font-family: 'Noto Sans TC', sans-serif;
       background: var(--cream);
       color: var(--dark);
       min-height: 100vh;
+      line-height: 1.6;
     }
 
     /* ===== 頂部 Header ===== */
     header {
       background: var(--white);
-      border-bottom: 2px solid var(--almond);
-      padding: 14px 20px;
+      border-bottom: 1px solid var(--almond);
+      padding: 16px 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       position: sticky;
       top: 0;
       z-index: 100;
-      box-shadow: 0 2px 12px var(--shadow);
+      box-shadow: 0 4px 20px var(--shadow);
     }
     .logo {
-      font-size: 2rem;
+      font-size: 1.5rem;
       font-weight: 700;
       color: var(--brown);
-      letter-spacing: 0.05em;
+      letter-spacing: 0.02em;
     }
-    .logo span { color: var(--tan); }
+    .logo span { color: var(--tan); font-weight: 400; }
     #user-info {
-      font-size: 1rem;
-      color: var(--brown);
+      font-size: 0.9rem;
+      color: var(--tan);
       display: none;
+      font-weight: 500;
     }
-    #user-info strong { color: var(--dark); }
+    #user-info strong { color: var(--brown); }
 
     /* ===== 主容器 ===== */
-    main { max-width: 480px; margin: 0 auto; padding: 0 0 120px; }
+    main { max-width: 480px; margin: 0 auto; padding: 0 0 100px; }
 
     /* ===== 登入畫面 ===== */
     #login-screen {
@@ -69,228 +76,224 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      min-height: calc(100vh - 60px);
-      padding: 30px 24px;
+      min-height: calc(100vh - 80px);
+      padding: 24px;
     }
     .login-card {
       background: var(--white);
-      border-radius: var(--radius);
-      padding: 36px 28px;
+      border-radius: 24px;
+      padding: 40px 32px;
       width: 100%;
       max-width: 360px;
-      box-shadow: 0 4px 24px var(--shadow);
+      box-shadow: 0 12px 40px var(--shadow-lg);
       text-align: center;
+      border: 1px solid var(--almond);
     }
     .login-card .icon { 
-      width: 100px; 
-      height: 100px; 
-      margin: 0 auto 15px;
+      width: 90px; 
+      height: 90px; 
+      margin: 0 auto 24px;
       border-radius: 50%;
       overflow: hidden;
-      border: 3px solid var(--almond);
+      border: 4px solid var(--almond);
+      box-shadow: 0 4px 12px var(--shadow);
     }
     .login-card .icon img {
-      width: 95%;
+      width: 100%;
       height: 100%;
       object-fit: cover;
     }
-    .login-card h2 { font-size: 1.3rem; color: var(--brown); margin-bottom: 6px; }
-    .login-card p { font-size: 0.88rem; color: #888; margin-bottom: 24px; }
+    .login-card h2 { font-size: 1.5rem; color: var(--dark); margin-bottom: 8px; font-weight: 700; }
+    .login-card p { font-size: 0.95rem; color: var(--tan); margin-bottom: 32px; }
     .input-group {
       position: relative;
-      margin-bottom: 16px;
+      margin-bottom: 20px;
     }
     .input-group input {
       width: 100%;
-      padding: 13px 16px;
-      border: 2px solid var(--almond);
-      border-radius: 10px;
+      padding: 14px 18px;
+      border: 1.5px solid var(--almond);
+      border-radius: var(--radius-sm);
       font-size: 1rem;
-      background: var(--cream);
+      background: #faf7f2;
       color: var(--dark);
       outline: none;
-      transition: border-color var(--trans);
+      transition: all var(--trans);
+      font-family: inherit;
     }
-    .input-group input:focus { border-color: var(--tan); }
+    .input-group input:focus { 
+      border-color: var(--tan); 
+      background: var(--white);
+      box-shadow: 0 0 0 4px rgba(176, 137, 104, 0.1);
+    }
     .btn-primary {
       width: 100%;
-      padding: 13px;
+      padding: 14px;
       background: var(--brown);
       color: var(--white);
       border: none;
-      border-radius: 10px;
-      font-size: 1rem;
+      border-radius: var(--radius-sm);
+      font-size: 1.05rem;
       font-weight: 600;
       cursor: pointer;
-      transition: background var(--trans), transform 0.1s;
+      transition: all var(--trans);
+      box-shadow: 0 4px 12px rgba(127, 85, 57, 0.3);
     }
-    .btn-primary:hover { background: var(--dark); }
-    .btn-primary:active { transform: scale(0.98); }
-    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+    .btn-primary:hover { background: var(--dark); transform: translateY(-1px); box-shadow: 0 6px 16px rgba(127, 85, 57, 0.4); }
+    .btn-primary:active { transform: translateY(0); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
     /* ===== 點餐畫面 ===== */
-    #order-screen { display: none; }
+    #order-screen { display: none; animation: fadeIn 0.5s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
     /* 分類標籤 */
     .category-tabs {
       display: flex;
-      gap: 8px;
-      padding: 16px 16px 0;
+      gap: 10px;
+      padding: 20px 20px 10px;
       overflow-x: auto;
       scrollbar-width: none;
     }
     .category-tabs::-webkit-scrollbar { display: none; }
     .tab-btn {
       flex-shrink: 0;
-      padding: 7px 18px;
-      border-radius: 20px;
-      border: 2px solid var(--almond);
+      padding: 8px 20px;
+      border-radius: 25px;
+      border: 1.5px solid var(--almond);
       background: var(--white);
-      color: var(--brown);
-      font-size: 0.88rem;
+      color: var(--tan);
+      font-size: 0.9rem;
       font-weight: 600;
       cursor: pointer;
       transition: all var(--trans);
     }
-    .tab-btn.active, .tab-btn:hover {
+    .tab-btn.active {
       background: var(--brown);
       color: var(--white);
       border-color: var(--brown);
+      box-shadow: 0 4px 10px rgba(127, 85, 57, 0.2);
     }
 
     /* 菜單區塊 */
-    .menu-section { padding: 16px; }
+    .menu-section { padding: 10px 20px; }
     .section-title {
-      font-size: 1rem;
+      font-size: 1.1rem;
       font-weight: 700;
       color: var(--brown);
-      margin-bottom: 12px;
-      padding-left: 10px;
-      border-left: 4px solid var(--tan);
+      margin: 24px 0 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--almond);
     }
     .menu-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
+      gap: 16px;
     }
 
     /* 飲品卡片 */
     .drink-card {
       background: var(--white);
       border-radius: var(--radius);
-      padding: 16px 14px;
+      padding: 20px 16px;
       cursor: pointer;
-      border: 2px solid transparent;
-      box-shadow: 0 2px 8px var(--shadow);
+      border: 1px solid var(--almond);
+      box-shadow: 0 4px 12px var(--shadow);
       transition: all var(--trans);
       position: relative;
-      overflow: hidden;
       display: flex;
       flex-direction: column;
     }
     .drink-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px var(--shadow-lg);
       border-color: var(--tan);
-      transform: translateY(-3px);
-      box-shadow: 0 6px 18px var(--shadow);
     }
-    .drink-card:active { transform: scale(0.97); }
     .drink-name {
-      font-size: 1rem;
+      font-size: 1.05rem;
       font-weight: 700;
       color: var(--dark);
-      margin-bottom: 8px;
+      margin-bottom: 12px;
+      line-height: 1.3;
+      padding-right: 24px; /* 為右上角的加號留出空間 */
     }
     .drink-prices {
       margin-top: auto;
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 6px;
     }
     .price-tag {
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       display: flex;
       justify-content: space-between;
-      color: #666;
+      color: var(--tan);
+      font-weight: 500;
     }
     .price-tag .val {
-      color: var(--tan);
+      color: var(--brown);
       font-weight: 700;
     }
     .add-icon {
       position: absolute;
-      top: 10px;
-      right: 10px;
-      width: 26px;
-      height: 26px;
+      top: 16px;
+      right: 16px;
+      width: 28px;
+      height: 28px;
       background: var(--tan);
       color: white;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.1rem;
-      font-weight: bold;
-      opacity: 0;
-      transition: opacity var(--trans);
+      font-size: 1.2rem;
+      opacity: 0.6; /* 稍微調低初始透明度，更簡約 */
+      transition: all var(--trans);
     }
-    .drink-card:hover .add-icon { opacity: 1; }
+    .drink-card:hover .add-icon { background: var(--brown); transform: scale(1.1); opacity: 1; }
 
-    /* ===== 公告彈窗 (首頁彈窗) ===== */
+    /* ===== 公告彈窗 ===== */
     .promo-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.75);
+      background: rgba(43, 24, 12, 0.8);
       z-index: 1000;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 20px;
+      padding: 24px;
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.4s ease;
+      backdrop-filter: blur(4px);
     }
-    .promo-overlay.open {
-      opacity: 1;
-      pointer-events: all;
-    }
+    .promo-overlay.open { opacity: 1; pointer-events: all; }
     .promo-content {
       background: var(--white);
       width: 100%;
-      max-width: 400px;
-      border-radius: 20px;
+      max-width: 380px;
+      border-radius: 24px;
       overflow: hidden;
-      position: relative;
-      transform: scale(0.8);
+      transform: scale(0.9);
       transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
     }
     .promo-overlay.open .promo-content { transform: scale(1); }
-    .promo-img {
-      width: 100%;
-      display: block;
-      background: #f0f0f0;
-    }
-    .promo-footer {
-      padding: 20px;
-      text-align: center;
-    }
-    .btn-close-promo {
-      width: 100%;
-      padding: 12px;
-      background: var(--brown);
-      color: white;
-      border: none;
-      border-radius: 10px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-    }
+    .promo-img { width: 100%; display: block; }
+    .promo-footer { padding: 24px; text-align: center; }
 
     /* ===== 客製選項彈窗 ===== */
     .modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(62, 44, 26, 0.45);
+      background: rgba(43, 24, 12, 0.5);
       z-index: 200;
       display: flex;
       align-items: flex-end;
@@ -298,113 +301,177 @@
       opacity: 0;
       pointer-events: none;
       transition: opacity var(--trans);
+      backdrop-filter: blur(2px);
     }
-    .modal-overlay.open {
-      opacity: 1;
-      pointer-events: all;
-    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
     .modal-sheet {
       background: var(--white);
-      border-radius: 20px 20px 0 0;
+      border-radius: 24px 24px 0 0;
       width: 100%;
       max-width: 480px;
-      padding: 24px 20px 36px;
+      padding: 24px 24px 40px;
       transform: translateY(100%);
-      transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
-      max-height: 90vh;
+      transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+      max-height: 85vh;
       overflow-y: auto;
     }
     .modal-overlay.open .modal-sheet { transform: translateY(0); }
     .modal-handle {
       width: 40px;
-      height: 4px;
+      height: 5px;
       background: var(--almond);
-      border-radius: 2px;
-      margin: 0 auto 20px;
+      border-radius: 3px;
+      margin: 0 auto 24px;
     }
     .modal-drink-header {
       display: flex;
       align-items: center;
-      gap: 14px;
-      margin-bottom: 22px;
+      gap: 16px;
+      margin-bottom: 28px;
     }
-    .modal-drink-name { font-size: 1.2rem; font-weight: 700; color: var(--dark); }
-    .modal-drink-price { font-size: 1rem; color: var(--tan); font-weight: 600; }
+    .modal-drink-emoji { font-size: 2.5rem; }
+    .modal-drink-name { font-size: 1.4rem; font-weight: 700; color: var(--dark); margin-bottom: 4px; }
+    .modal-drink-price { font-size: 1rem; color: var(--tan); font-weight: 500; }
 
-    /* 選項群組 */
-    .option-group { margin-bottom: 20px; }
+    .option-group { margin-bottom: 24px; }
     .option-label {
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       font-weight: 700;
       color: var(--brown);
-      margin-bottom: 10px;
+      margin-bottom: 12px;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
     }
     .option-label .badge {
-      font-size: 0.7rem;
+      font-size: 0.75rem;
       background: var(--almond);
       color: var(--brown);
-      padding: 2px 7px;
-      border-radius: 10px;
+      padding: 2px 8px;
+      border-radius: 12px;
     }
-    .option-buttons {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
+    .option-buttons { display: flex; gap: 12px; flex-wrap: wrap; }
     .opt-btn {
       flex: 1;
-      min-width: 80px;
-      padding: 12px 10px;
-      border: 2px solid var(--almond);
-      border-radius: 10px;
-      background: var(--cream);
-      color: var(--dark);
-      font-size: 0.9rem;
+      min-width: 90px;
+      padding: 14px 12px;
+      border: 1.5px solid var(--almond);
+      border-radius: var(--radius-sm);
+      background: #faf7f2;
+      color: var(--tan);
+      font-size: 0.95rem;
       font-weight: 600;
       cursor: pointer;
-      text-align: center;
       transition: all var(--trans);
     }
-    .opt-btn:hover { border-color: var(--tan); background: var(--almond); }
     .opt-btn.selected {
       background: var(--brown);
       color: var(--white);
       border-color: var(--brown);
+      box-shadow: 0 4px 12px rgba(127, 85, 57, 0.2);
     }
-    .opt-btn:disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
-      background: #eee;
-      border-color: #ddd;
-      color: #aaa;
-    }
-    .opt-btn .opt-extra { font-size: 0.75rem; opacity: 0.85; margin-top: 2px; }
+    .opt-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+    .opt-extra { font-size: 0.75rem; opacity: 0.8; margin-top: 2px; }
 
-    /* 加入購物車按鈕 */
-    .btn-add-cart {
-      width: 100%;
-      padding: 15px;
-      background: var(--tan);
-      color: var(--white);
-      border: none;
-      border-radius: 12px;
-      font-size: 1.05rem;
+    /* 數量選擇器 */
+    .qty-selector {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      justify-content: center;
+      background: #faf7f2;
+      padding: 12px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--almond);
+    }
+    .qty-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1.5px solid var(--tan);
+      background: white;
+      color: var(--tan);
+      font-size: 1.4rem;
       font-weight: 700;
       cursor: pointer;
-      margin-top: 10px;
-      transition: background var(--trans), transform 0.1s;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      transition: all var(--trans);
     }
-    .btn-add-cart:hover { background: var(--brown); }
-    .btn-add-cart:active { transform: scale(0.98); }
+    .qty-btn.plus { background: var(--tan); color: white; }
+    .qty-btn:active { transform: scale(0.9); }
+    #modal-qty { font-size: 1.4rem; font-weight: 700; color: var(--dark); min-width: 40px; text-align: center; }
 
-    /* ===== 底部導覽列 ===== */
+    .btn-add-cart {
+      width: 100%;
+      padding: 16px;
+      background: var(--brown);
+      color: white;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 12px;
+      box-shadow: 0 8px 20px rgba(127, 85, 57, 0.3);
+      transition: all var(--trans);
+    }
+    .btn-add-cart:hover { background: var(--dark); transform: translateY(-2px); }
+
+    /* ===== 購物車與訂單查詢 ===== */
+    #cart-panel, #orders-panel { display: none; padding: 20px; animation: fadeIn 0.4s ease; }
+    .panel-title { font-size: 1.4rem; font-weight: 700; color: var(--brown); margin-bottom: 24px; }
+
+    .cart-item {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 18px;
+      margin-bottom: 12px;
+      border: 1px solid var(--almond);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .cart-item-info h4 { font-size: 1rem; color: var(--dark); margin-bottom: 4px; }
+    .cart-item-info p { font-size: 0.85rem; color: var(--tan); }
+    .cart-item-price { font-weight: 700; color: var(--brown); }
+    .btn-remove { color: #d66; font-size: 0.85rem; border: none; background: none; cursor: pointer; margin-top: 8px; font-weight: 600; }
+
+    .pickup-section {
+      background: var(--white);
+      padding: 20px;
+      border-radius: var(--radius);
+      margin: 24px 0;
+      border: 1px solid var(--almond);
+    }
+    .pickup-section label { display: block; font-size: 0.95rem; font-weight: 700; color: var(--brown); margin-bottom: 12px; }
+    .pickup-section select {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1.5px solid var(--almond);
+      font-family: inherit;
+      font-size: 1rem;
+      outline: none;
+      background: #faf7f2;
+    }
+
+    .total-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0;
+      border-top: 1px dashed var(--almond);
+      margin-bottom: 12px;
+    }
+    .total-bar span { color: var(--tan); font-weight: 500; }
+    .total-bar strong { font-size: 1.6rem; color: var(--brown); }
+
+    /* ===== 底部導覽 ===== */
     .bottom-nav {
       position: fixed;
       bottom: 0;
@@ -413,241 +480,80 @@
       width: 100%;
       max-width: 480px;
       background: var(--white);
-      border-top: 2px solid var(--almond);
       display: flex;
+      padding: 10px 16px 28px;
+      border-top: 1px solid var(--almond);
+      box-shadow: 0 -4px 20px var(--shadow);
       z-index: 150;
-      box-shadow: 0 -4px 16px var(--shadow);
     }
     .nav-btn {
       flex: 1;
-      padding: 12px 8px;
       border: none;
-      background: transparent;
-      color: var(--brown);
-      font-size: 0.82rem;
-      font-weight: 600;
-      cursor: pointer;
+      background: none;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 4px;
-      transition: color var(--trans), background var(--trans);
+      gap: 6px;
+      color: var(--tan);
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
       position: relative;
+      transition: all var(--trans);
     }
-    .nav-btn:hover { background: var(--cream); }
-    .nav-btn.active { color: var(--tan); }
-    .nav-icon { font-size: 1.4rem; }
+    .nav-btn.active { color: var(--brown); }
+    .nav-icon { font-size: 1.4rem; transition: transform var(--trans); }
+    .nav-btn.active .nav-icon { transform: translateY(-4px); }
     .cart-badge {
       position: absolute;
-      top: 5px;
-      right: 25%;
-      background: #e74c3c;
+      top: -4px;
+      right: 20%;
+      background: #d66;
       color: white;
       font-size: 0.7rem;
+      padding: 2px 6px;
+      border-radius: 10px;
       min-width: 18px;
-      height: 18px;
-      border-radius: 9px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0 4px;
+      text-align: center;
       font-weight: 700;
-      display: none;
+      box-shadow: 0 2px 6px rgba(214, 102, 102, 0.4);
     }
 
-    /* ===== 面板共通樣式 ===== */
-    #cart-panel, #orders-panel {
-      display: none;
-      padding: 20px 16px;
-    }
-    .panel-title {
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: var(--brown);
-      margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    /* 購物車項目 */
-    .cart-item {
-      background: var(--white);
-      border-radius: var(--radius);
-      padding: 14px;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      box-shadow: 0 2px 8px var(--shadow);
-    }
-    .cart-item-info { flex: 1; }
-    .cart-item-name { font-size: 0.95rem; font-weight: 700; color: var(--dark); }
-    .cart-item-opts { font-size: 0.8rem; color: #888; margin-top: 2px; }
-    .cart-item-price { font-size: 0.95rem; font-weight: 700; color: var(--tan); }
-    .cart-item-remove {
-      border: none;
-      background: #fdeaea;
-      color: #e74c3c;
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.8rem;
-    }
-
-    /* 結帳區 */
-    .pickup-section {
-      background: var(--white);
-      border-radius: var(--radius);
-      padding: 16px;
-      margin: 20px 0;
-      box-shadow: 0 2px 8px var(--shadow);
-    }
-    .pickup-section label {
-      display: block;
-      font-size: 0.9rem;
-      font-weight: 700;
-      color: var(--brown);
-      margin-bottom: 10px;
-    }
-    .pickup-section select {
-      width: 100%;
-      padding: 10px;
-      border: 2px solid var(--almond);
-      border-radius: 8px;
-      font-size: 1rem;
-      background: var(--cream);
-      outline: none;
-    }
-    .total-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 16px;
-      background: var(--white);
-      border-radius: var(--radius);
-      margin-bottom: 20px;
-      box-shadow: 0 2px 8px var(--shadow);
-    }
-    .total-bar span { font-size: 1rem; color: var(--brown); font-weight: 600; }
-    .total-bar strong { font-size: 1.3rem; color: var(--tan); }
-
-    /* 訂單查詢卡片 */
+    /* 訂單卡片 */
     .order-card {
       background: var(--white);
       border-radius: var(--radius);
-      padding: 18px;
+      padding: 20px;
       margin-bottom: 16px;
-      box-shadow: 0 2px 12px var(--shadow);
-      border-left: 5px solid var(--tan);
+      border: 1px solid var(--almond);
+      box-shadow: 0 4px 12px var(--shadow);
     }
-    .order-header {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 12px;
-      padding-bottom: 8px;
-      border-bottom: 1px dashed var(--almond);
-    }
-    .order-id { font-size: 0.85rem; font-weight: 700; color: var(--brown); }
-    .order-time { font-size: 0.8rem; color: #999; }
-    .order-pickup {
-      font-size: 0.9rem;
-      color: var(--tan);
-      font-weight: 600;
-      margin-bottom: 8px;
-    }
-    .order-items { font-size: 0.85rem; color: #666; line-height: 1.6; }
-    .order-total {
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: var(--dark);
-      margin-top: 8px;
-      padding-top: 8px;
-      border-top: 1px solid var(--almond);
-    }
+    .order-header { display: flex; justify-content: space-between; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #f0f0f0; }
+    .order-id { font-size: 0.85rem; color: var(--tan); font-family: monospace; }
+    .order-time { font-size: 0.85rem; color: var(--tan); }
+    .order-item { font-size: 0.95rem; margin-bottom: 6px; color: var(--dark); display: flex; justify-content: space-between; }
+    .order-total { text-align: right; font-weight: 700; color: var(--brown); margin-top: 12px; font-size: 1.1rem; }
 
-    /* ===== 成功提示 ===== */
-    .toast {
-      position: fixed;
-      top: 80px;
-      left: 50%;
-      transform: translateX(-50%) translateY(-20px);
-      background: var(--dark);
-      color: var(--white);
-      padding: 12px 24px;
-      border-radius: 30px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      opacity: 0;
-      transition: all 0.3s;
-      z-index: 300;
-      white-space: nowrap;
-    }
-    .toast.show {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
-
-    /* ===== 訂單成功畫面 ===== */
-    .success-screen {
-      text-align: center;
-      padding: 40px 20px;
-    }
-    .success-icon { font-size: 4rem; margin-bottom: 16px; }
-    .success-screen h3 { font-size: 1.3rem; color: var(--brown); margin-bottom: 8px; }
-    .success-screen p { font-size: 0.9rem; color: #888; margin-bottom: 6px; }
-    .order-number-display {
-      background: var(--almond);
-      border-radius: 10px;
-      padding: 12px 20px;
-      margin: 16px 0;
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--brown);
-    }
-
-    /* ===== 載入動畫 ===== */
-    .spinner {
-      display: inline-block;
-      width: 18px;
-      height: 18px;
-      border: 2px solid rgba(255,255,255,0.4);
-      border-top-color: white;
+    /* 空狀態與載入中 */
+    .empty-state { text-align: center; padding: 60px 20px; color: var(--tan); }
+    .loading-spinner {
+      width: 30px;
+      height: 30px;
+      border: 3px solid var(--almond);
+      border-top-color: var(--brown);
       border-radius: 50%;
-      animation: spin 0.7s linear infinite;
+      animation: spin 0.8s linear infinite;
+      margin: 20px auto;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* ===== RWD ===== */
-    @media (max-width: 360px) {
-      .menu-grid { grid-template-columns: 1fr; }
-    }
   </style>
 </head>
 <body>
 
-<!-- ===== 首頁公告彈窗 ===== -->
-<div class="promo-overlay" id="promo-overlay">
-  <div class="promo-content">
-    <img src="https://github.com/aeroro87/CHUNYEH/blob/main/IMG_7618.JPG?raw=true" alt="今日推薦" class="promo-img" id="promo-image">
-    <div class="promo-footer">
-      <button class="btn-close-promo" onclick="closePromo()">開始點餐</button>
-    </div>
-  </div>
-</div>
-
-<!-- ===== Header ===== -->
 <header>
   <div class="logo">春葉手作茶飲</div>
   <div id="user-info">您好，<strong id="display-phone"></strong></div>
 </header>
-
-<!-- ===== Toast 提示 ===== -->
-<div class="toast" id="toast"></div>
 
 <!-- ===== 登入畫面 ===== -->
 <div id="login-screen">
@@ -667,6 +573,16 @@
   </div>
 </div>
 
+<!-- ===== 公告彈窗 (登入後顯示) ===== -->
+<div class="promo-overlay" id="promo-overlay">
+  <div class="promo-content">
+    <img src="https://github.com/aeroro87/CHUNYEH/blob/main/IMG_7618.JPG?raw=true" alt="最新活動" class="promo-img" id="promo-image">
+    <div class="promo-footer">
+      <button class="btn-primary" onclick="closePromo()">開始點餐</button>
+    </div>
+  </div>
+</div>
+
 <!-- ===== 點餐主畫面 ===== -->
 <main>
   <!-- 菜單 -->
@@ -682,11 +598,11 @@
 
   <!-- 購物車面板 -->
   <div id="cart-panel">
-    <div class="panel-title">🛒 購物車</div>
+    <div class="panel-title">購物車</div>
     <div id="cart-items-container"></div>
     <div id="cart-checkout-area" style="display:none;">
       <div class="pickup-section">
-        <label>⏰ 預計自取時間</label>
+        <label>預計自取時間</label>
         <select id="pickup-time"></select>
       </div>
       <div class="total-bar">
@@ -700,7 +616,7 @@
 
   <!-- 訂單查詢面板 -->
   <div id="orders-panel">
-    <div class="panel-title">📋 我的訂單</div>
+    <div class="panel-title">我的訂單</div>
     <div id="orders-container"></div>
   </div>
 </main>
@@ -727,22 +643,22 @@
   <div class="modal-sheet">
     <div class="modal-handle"></div>
     <div class="modal-drink-header">
-      <span class="modal-drink-emoji" id="modal-emoji">🧋</span>
+      <span class="modal-drink-emoji" id="modal-emoji"></span>
       <div>
         <div class="modal-drink-name" id="modal-name">飲品名稱</div>
         <div class="modal-drink-price" id="modal-price">價格資訊</div>
       </div>
     </div>
 
-    <!-- 杯裝/瓶裝 (僅在有 cupPrice 時顯示) -->
+    <!-- 容器選擇 -->
     <div class="option-group" id="container-option-group">
-      <div class="option-label">🥤 容器選擇 </div>
+      <div class="option-label">容器選擇</div>
       <div class="option-buttons" id="modal-cup-options"></div>
     </div>
 
-    <!-- 冰塊 (僅在非單一價格商品時顯示) -->
+    <!-- 冰塊選擇 -->
     <div class="option-group" id="ice-option-group">
-      <div class="option-label">🧊 冰塊選擇 </div>
+      <div class="option-label">冰塊選擇</div>
       <div class="option-buttons" id="modal-ice-options">
         <button class="opt-btn selected" data-group="ice" data-value="有冰" onclick="selectOpt(this)">有冰</button>
         <button class="opt-btn" data-group="ice" data-value="去冰" onclick="selectOpt(this)">去冰</button>
@@ -751,7 +667,7 @@
 
     <!-- 鮮奶加量 -->
     <div class="option-group" id="milk-option" style="display:none;">
-      <div class="option-label">🥛 鮮奶加量 <span class="badge">+$5</span></div>
+      <div class="option-label">鮮奶加量 <span class="badge">+$5</span></div>
       <div class="option-buttons">
         <button class="opt-btn selected" data-group="extraMilk" data-value="不加" onclick="selectOpt(this)">不加</button>
         <button class="opt-btn" data-group="extraMilk" data-value="加量" onclick="selectOpt(this)">加量<div class="opt-extra">+$5</div></button>
@@ -760,11 +676,11 @@
 
     <!-- 數量選擇 -->
     <div class="option-group">
-      <div class="option-label">🔢 購買數量</div>
-      <div style="display: flex; align-items: center; gap: 20px; justify-content: center; background: var(--cream); padding: 10px; border-radius: 10px;">
-        <button onclick="updateQty(-1)" style="width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--tan); background: white; color: var(--tan); font-size: 1.5rem; font-weight: bold; cursor: pointer;">-</button>
-        <span id="modal-qty" style="font-size: 1.4rem; font-weight: 700; min-width: 30px; text-align: center;">1</span>
-        <button onclick="updateQty(1)" style="width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--tan); background: var(--tan); color: white; font-size: 1.5rem; font-weight: bold; cursor: pointer;">+</button>
+      <div class="option-label">購買數量</div>
+      <div class="qty-selector">
+        <button class="qty-btn" onclick="updateQty(-1)">-</button>
+        <span id="modal-qty">1</span>
+        <button class="qty-btn plus" onclick="updateQty(1)">+</button>
       </div>
     </div>
 
@@ -776,7 +692,7 @@
 </div>
 
 <script>
-// ===== Firebase 設定 (請替換為您的設定) =====
+// ===== Firebase 設定 =====
 const firebaseConfig = {
   apiKey: "AIzaSyDBMBe5LPv3BiR6V_7BT4_pQp2a6QN32_Y",
   authDomain: "chenyun-94a25.firebaseapp.com",
@@ -787,12 +703,10 @@ const firebaseConfig = {
   measurementId: "G-3XM61XWT03"
 };
 
-// 初始化 Firebase
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 // ===== 菜單資料 =====
-// 提示：若為無子項目商品，請只設定 price，不要設定 cupPrice/bottlePrice
 const MENU = [
   { id: 1, name: '蓮藕茶', cupPrice: 50, bottlePrice: 95, hasMilk: false, category: ['lols']},
   { id: 2, name: '蓮藕鮮奶', cupPrice: 60, bottlePrice: 105, hasMilk: true, category: ['lols']},
@@ -800,8 +714,8 @@ const MENU = [
   { id: 4, name: '洛神冬瓜', cupPrice: 50, bottlePrice: 90, hasMilk: false, category: ['lols']},
   { id: 5, name: '古早味紅茶', cupPrice: 30, bottlePrice: 65, hasMilk: false, category: ['tea','red']},
   { id: 6, name: '紅茶鮮奶', cupPrice: 50, bottlePrice: 85, hasMilk: true, category: ['tea','red']},
-  { id: 7, name: '高山烏龍茶（無糖）', cupPrice: 35, bottlePrice: 70, hasMilk: false, category: ['tea','ol']},
-  { id: 8, name: '烏龍綠茶（無糖）', cupPrice: 35, bottlePrice: 70, hasMilk: false, category: ['tea','ol','green']},
+  { id: 7, name: '高山烏龍茶 （無糖）', cupPrice: 35, bottlePrice: 70, hasMilk: false, category: ['tea','ol']},
+  { id: 8, name: '烏龍綠茶（無糖）', cupPrice: 35, bottlePrice: 70, hasMilk: false, category: ['tea','ol']},
   { id: 9, name: '烏龍鮮奶（無糖）', cupPrice: 55, bottlePrice: 85, hasMilk: true, category: ['tea','ol']},
   { id: 10,name: '薰衣草茶', cupPrice: 45, bottlePrice: 90, hasMilk: false, category: ['flower','se']},
   { id: 11,name: '薰衣草紅茶', cupPrice: 45, bottlePrice: 90, hasMilk: false, category: ['flower','se']},
@@ -816,8 +730,7 @@ const MENU = [
   { id: 20,name: '甘露冬瓜茶', cupPrice: 30, bottlePrice: 60, hasMilk: false, category: ['tea','d']},
   { id: 21,name: '綠茶冬瓜', cupPrice: 30, bottlePrice: 60, hasMilk: false, category: ['tea','green','d']},
   { id: 22,name: '冬瓜鮮奶', cupPrice: 50, bottlePrice: 85, hasMilk: true, category: ['tea','d']},
-  // 單一價格商品範例
-  
+  // 單一價格商品
   { id: 101, name: '薰衣草茶包', price: 180, category: ['other','tb']},
   { id: 102, name: '薰衣草茶包X2', price: 350, category: ['other','tb']},
   { id: 103, name: '玫瑰花茶包', price: 180, category: ['other','tb']},
@@ -837,40 +750,32 @@ let currentOptions = { cup: '杯裝', ice: '有冰', extraMilk: '不加', qty: 1
 
 // ===== 初始化 =====
 window.onload = function() {
-// 每次開啟網頁時清除本地儲存的資訊 (LocalStorage)
   localStorage.clear();
-  console.log('本地儲存空間已清空，請重新登入');
+  console.log('本地儲存空間已清空');
 };
 
 function closePromo() {
   document.getElementById('promo-overlay').classList.remove('open');
 }
 
-// ===== 登入相關功能 (整合 Firebase) =====
+// ===== 登入相關功能 =====
 async function checkUserRecord() {
   const phone = document.getElementById('phone-input').value.trim();
   const nameGroup = document.getElementById('name-group');
   const nameInput = document.getElementById('name-input');
   
   if (/^09\d{8}$/.test(phone)) {
-    let savedName = localStorage.getItem('userName_' + phone);
-    if (!savedName) {
-      try {
-        const doc = await db.collection('users').doc(phone).get();
-        if (doc.exists) {
-          savedName = doc.data().name;
-          localStorage.setItem('userName_' + phone, savedName);
-        }
-      } catch (e) { console.error("Firebase 查詢失敗", e); }
-    }
-
-    if (savedName) {
-      nameGroup.style.display = 'none';
-      nameInput.value = savedName;
-    } else {
-      nameGroup.style.display = 'block';
-      nameInput.value = '';
-    }
+    try {
+      const doc = await db.collection('users').doc(phone).get();
+      if (doc.exists) {
+        const savedName = doc.data().name;
+        nameGroup.style.display = 'none';
+        nameInput.value = savedName;
+      } else {
+        nameGroup.style.display = 'block';
+        nameInput.value = '';
+      }
+    } catch (e) { console.error("Firebase 查詢失敗", e); }
   }
 }
 
@@ -879,36 +784,27 @@ async function doLogin() {
   const name = document.getElementById('name-input').value.trim();
   const loginBtn = document.getElementById('login-btn');
   
-  if (!/^09\d{8}$/.test(phone)) return alert('請輸入正確的手機號碼 (10位數字)');
-  if (!name) return alert('請輸入您的姓名或暱稱');
+  if (!/^09\d{8}$/.test(phone)) return alert('請輸入正確的手機號碼');
+  if (!name) return alert('請輸入您的姓名');
   
   loginBtn.disabled = true;
-  loginBtn.innerHTML = '<span class="spinner"></span> 登入中...';
-
+  loginBtn.textContent = '登入中...';
+  
   try {
-    await db.collection('users').doc(phone).set({
-      name: name,
-      lastLogin: firebase.firestore.FieldValue.serverTimestamp()
-    }, { merge: true });
-
+    await db.collection('users').doc(phone).set({ name, lastLogin: new Date() });
     currentPhone = phone;
     currentUserName = name;
-    localStorage.setItem('userName_' + phone, name);
     
     document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('order-screen').style.display = 'block';
     document.getElementById('bottom-nav').style.display = 'flex';
     document.getElementById('user-info').style.display = 'block';
-    document.getElementById('display-phone').textContent = `${name}`;
+    document.getElementById('display-phone').textContent = name;
     
     showPanel('menu');
-    // 預設顯示蓮藕、洛神
-    const defaultTab = document.getElementById('default-tab');
-    filterCategory('lols', defaultTab);
+    filterCategory('lols', document.getElementById('default-tab'));
     document.getElementById('promo-overlay').classList.add('open');
   } catch (e) {
-    alert('雲端同步失敗，請檢查網路連線');
-    console.error(e);
+    alert('登入失敗，請檢查網路連線');
   } finally {
     loginBtn.disabled = false;
     loginBtn.textContent = '進入點餐';
@@ -919,7 +815,8 @@ async function doLogin() {
 function renderMenu(items) {
   const container = document.getElementById('menu-container');
   container.innerHTML = '';
-  const categories = { 'lols': '蓮藕、洛神系列（無咖啡因）',
+  const categories = { 
+    				   'lols': '蓮藕、洛神系列（無咖啡因）',
    					   'se': '薰衣草（無咖啡因）', 
    					   'ros': '玫瑰花（無咖啡因）', 
    					   'red': '古早味紅茶',
@@ -928,24 +825,25 @@ function renderMenu(items) {
    					   'd': '冬瓜茶（無咖啡因）',
     				   'tb': '茶包',
     				   'mg': '梅有芒果'
-    };
+ 					 };
 
   for (let cat in categories) {
     const catItems = items.filter(i => i.category.includes(cat));
     if (catItems.length === 0) continue;
+    
     const section = document.createElement('div');
     section.className = 'menu-section';
     section.innerHTML = `
       <div class="section-title">${categories[cat]}</div>
       <div class="menu-grid">
         ${catItems.map(item => {
-          const isSinglePrice = item.price !== undefined;
+          const isSingle = item.price !== undefined;
           return `
             <div class="drink-card" onclick="openModal(${item.id})">
               <div class="add-icon">+</div>
               <div class="drink-name">${item.name}</div>
               <div class="drink-prices">
-                ${isSinglePrice ? 
+                ${isSingle ? 
                   `<div class="price-tag"><span>售價</span><span class="val">$${item.price}</span></div>` :
                   `<div class="price-tag"><span>杯裝</span><span class="val">$${item.cupPrice}</span></div>
                    <div class="price-tag"><span>瓶裝</span><span class="val">$${item.bottlePrice}</span></div>`
@@ -963,50 +861,41 @@ function renderMenu(items) {
 function filterCategory(cat, btn) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  
-  // 動態切換顯示內容
-  const filteredItems = MENU.filter(i => i.category.includes(cat));
-  renderMenu(filteredItems);
-  
-  // 自動捲動到上方
+  renderMenu(MENU.filter(i => i.category.includes(cat)));
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // ===== 客製選項彈窗 =====
 function openModal(id) {
   currentDrink = MENU.find(d => d.id === id);
-  const isSinglePrice = currentDrink.price !== undefined;
+  const isSingle = currentDrink.price !== undefined;
   
-  // 初始化選項
-  currentOptions = { cup: isSinglePrice ? '單一價格' : '杯裝', ice: '有冰', extraMilk: '不加', qty: 1 };
+  currentOptions = { cup: isSingle ? '單一價格' : '杯裝', ice: '有冰', extraMilk: '不加', qty: 1 };
   document.getElementById('modal-qty').textContent = '1';
-  document.getElementById('modal-emoji').textContent = currentDrink.emoji;
+  document.getElementById('modal-emoji').textContent = currentDrink.emoji || '🥤';
   document.getElementById('modal-name').textContent = currentDrink.name;
   
-  // 顯示價格資訊
-  document.getElementById('modal-price').textContent = isSinglePrice ? 
+  document.getElementById('modal-price').textContent = isSingle ? 
     `售價 $${currentDrink.price}` : 
     `杯裝 $${currentDrink.cupPrice} / 瓶裝 $${currentDrink.bottlePrice}`;
 
-  // 容器選擇顯示邏輯
   const containerGroup = document.getElementById('container-option-group');
-  if (isSinglePrice) {
+  const iceGroup = document.getElementById('ice-option-group');
+  
+  if (isSingle) {
     containerGroup.style.display = 'none';
-    document.getElementById('ice-option-group').style.display = 'none';
+    iceGroup.style.display = 'none';
   } else {
     containerGroup.style.display = 'block';
-    document.getElementById('ice-option-group').style.display = 'block';
-    const cupContainer = document.getElementById('modal-cup-options');
-    cupContainer.innerHTML = `
+    iceGroup.style.display = 'block';
+    document.getElementById('modal-cup-options').innerHTML = `
       <button class="opt-btn selected" data-group="cup" data-value="杯裝" onclick="selectOpt(this)">杯裝<div class="opt-extra">$${currentDrink.cupPrice}</div></button>
       <button class="opt-btn" data-group="cup" data-value="瓶裝" onclick="selectOpt(this)">瓶裝<div class="opt-extra">$${currentDrink.bottlePrice}</div></button>
     `;
   }
 
-  // 鮮奶加量顯示邏輯
   document.getElementById('milk-option').style.display = currentDrink.hasMilk ? 'block' : 'none';
   
-  // 重置冰塊選項樣式
   const iceBtns = document.querySelectorAll('#modal-ice-options .opt-btn');
   iceBtns.forEach(b => {
     b.disabled = false;
@@ -1048,197 +937,215 @@ function updateQty(delta) {
 
 function updateModalPrice() {
   if (!currentDrink) return;
-  let base = 0;
-  if (currentDrink.price !== undefined) {
-    base = currentDrink.price;
-  } else {
-    base = currentOptions.cup === '瓶裝' ? currentDrink.bottlePrice : currentDrink.cupPrice;
-  }
+  let base = currentDrink.price || (currentOptions.cup === '瓶裝' ? currentDrink.bottlePrice : currentDrink.cupPrice);
   if (currentOptions.extraMilk === '加量') base += 5;
   document.getElementById('modal-add-price').textContent = `$${base * currentOptions.qty}`;
 }
 
-// ===== 購物車與訂單邏輯 =====
+// ===== 購物車邏輯 =====
 function addToCart() {
-  if (!currentDrink) return;
-  const isSingle = currentDrink.price !== undefined;
-  let basePrice = isSingle ? currentDrink.price : (currentOptions.cup === '瓶裝' ? currentDrink.bottlePrice : currentDrink.cupPrice);
-  let unitTotal = basePrice + (currentOptions.extraMilk === '加量' ? 5 : 0);
+  let price = currentDrink.price || (currentOptions.cup === '瓶裝' ? currentDrink.bottlePrice : currentDrink.cupPrice);
+  if (currentOptions.extraMilk === '加量') price += 5;
   
-  cart.push({ 
-    id: Date.now(), 
-    drinkId: currentDrink.id, 
-    name: currentDrink.name, 
-    emoji: currentDrink.emoji || '', 
-    price: basePrice, 
-    cup: isSingle ? '' : (currentOptions.cup || ''), 
-    ice: isSingle ? '' : (currentOptions.ice || ''), 
-    extraMilk: currentOptions.extraMilk === '加量', 
-    qty: currentOptions.qty || 1, 
-    unitTotal: unitTotal, 
-    itemTotal: unitTotal * (currentOptions.qty || 1)
+  cart.push({
+    ...currentDrink,
+    options: { ...currentOptions },
+    itemTotal: price * currentOptions.qty
   });
   
   updateCartBadge();
   document.getElementById('drink-modal').classList.remove('open');
-  showToast(`已加入：${currentDrink.name} x ${currentOptions.qty}`);
 }
 
 function updateCartBadge() {
   const badge = document.getElementById('cart-badge');
-  const count = cart.reduce((sum, item) => sum + item.qty, 0);
-  badge.textContent = count;
-  badge.style.display = count > 0 ? 'flex' : 'none';
+  badge.textContent = cart.length;
+  badge.style.display = cart.length > 0 ? 'block' : 'none';
 }
 
 function renderCart() {
   const container = document.getElementById('cart-items-container');
   const checkoutArea = document.getElementById('cart-checkout-area');
-  if (cart.length === 0) { container.innerHTML = '<div style="text-align:center; padding:40px; color:#999;">購物車是空的</div>'; checkoutArea.style.display = 'none'; return; }
-  container.innerHTML = cart.map(item => `
-    <div class="cart-item">
+  container.innerHTML = '';
+  
+  if (cart.length === 0) {
+    container.innerHTML = '<div class="empty-state">購物車空空的，快去點餐吧！</div>';
+    checkoutArea.style.display = 'none';
+    return;
+  }
+
+  checkoutArea.style.display = 'block';
+  let total = 0;
+  cart.forEach((item, index) => {
+    total += item.itemTotal;
+    const div = document.createElement('div');
+    div.className = 'cart-item';
+    div.innerHTML = `
       <div class="cart-item-info">
-        <div class="cart-item-name">${item.name} ${item.cup ? `(${item.cup})` : ''} x ${item.qty}</div>
-        <div class="cart-item-opts">${item.ice ? item.ice : ''}${item.extraMilk ? (item.ice ? ' · ' : '') + '鮮奶加量' : ''}</div>
+        <h4>${item.name} x ${item.options.qty}</h4>
+        <p>${item.options.cup} | ${item.options.ice}${item.hasMilk ? ' | 鮮奶' + item.options.extraMilk : ''}</p>
+        <button class="btn-remove" onclick="removeFromCart(${index})">移除</button>
       </div>
       <div class="cart-item-price">$${item.itemTotal}</div>
-      <button class="cart-item-remove" onclick="removeFromCart(${item.id})">✕</button>
-    </div>
-  `).join('');
-  document.getElementById('cart-total').textContent = `$${cart.reduce((sum, i) => sum + i.itemTotal, 0)}`;
-  checkoutArea.style.display = 'block';
-  generatePickupTimes();
+    `;
+    container.appendChild(div);
+  });
+  
+  document.getElementById('cart-total').textContent = `$${total}`;
+  updatePickupOptions();
 }
 
-function removeFromCart(id) { cart = cart.filter(i => i.id !== id); updateCartBadge(); renderCart(); }
+function removeFromCart(index) {
+  cart.splice(index, 1);
+  updateCartBadge();
+  renderCart();
+}
 
-function generatePickupTimes() {
+function updatePickupOptions() {
   const select = document.getElementById('pickup-time');
   select.innerHTML = '';
   const now = new Date();
-  let hasOptions = false;
-  for (let h = 9; h <= 20; h++) {
-    for (let m = 0; m < 60; m += 10) {
-      if ((h === 9 && m < 30) || (h === 20 && m > 30)) continue;
-      const optTime = new Date(); optTime.setHours(h, m, 0);
-      if (optTime > new Date(now.getTime() + 10 * 60000)) {
-        const timeStr = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
-        select.innerHTML += `<option value="${timeStr}">${timeStr}</option>`;
-        hasOptions = true;
-      }
+  const start = new Date();
+  start.setHours(9, 30, 0);
+  const end = new Date();
+  end.setHours(20, 30, 0);
+  
+  let current = new Date(start);
+  let count = 0;
+  while (current <= end) {
+    // 至少預留 10 分鐘準備
+    if (current > new Date(now.getTime() + 10 * 60000)) {
+      const timeStr = current.getHours().toString().padStart(2, '0') + ':' + 
+                      current.getMinutes().toString().padStart(2, '0');
+      const opt = document.createElement('option');
+      opt.value = timeStr;
+      opt.textContent = timeStr;
+      select.appendChild(opt);
+      count++;
     }
+    current.setMinutes(current.getMinutes() + 10);
   }
-  const btn = document.getElementById('submit-btn');
-  if (!hasOptions) { select.innerHTML = '<option value="">今日已結束營業</option>'; btn.disabled = true; btn.style.opacity = '0.5'; }
-  else { btn.disabled = false; btn.style.opacity = '1'; }
+  
+  if (count === 0) {
+    const opt = document.createElement('option');
+    opt.textContent = '今日已結束營業';
+    select.appendChild(opt);
+    document.getElementById('submit-btn').disabled = true;
+  } else {
+    document.getElementById('submit-btn').disabled = false;
+  }
 }
 
 async function submitOrder() {
+  if (cart.length === 0) return;
   const pickupTime = document.getElementById('pickup-time').value;
-  if (!pickupTime) return alert('目前非營業時間');
-  const btn = document.getElementById('submit-btn');
-  const originalText = btn.innerHTML;
-  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> 處理中...';
+  if (pickupTime === '今日已結束營業') return alert('很抱歉，今日已結束營業');
+
+  const submitBtn = document.getElementById('submit-btn');
+  submitBtn.disabled = true;
+  submitBtn.textContent = '訂單傳送中...';
+
+  const orderId = 'ORD-' + Date.now().toString().slice(-8) + '-' + Math.floor(Math.random() * 1000);
+  const total = cart.reduce((sum, item) => sum + item.itemTotal, 0);
   
-  const orderId = `ORD-${Date.now().toString().slice(-8)}-${Math.floor(Math.random()*1000).toString().padStart(3, '0')}`;
   const orderData = {
     orderId,
     phone: currentPhone,
-    userName: currentUserName,
-    items: cart,
-    totalAmount: cart.reduce((sum, i) => sum + i.itemTotal, 0),
+    name: currentUserName,
+    items: cart.map(i => ({
+      name: i.name,
+      cup: i.options.cup,
+      ice: i.options.ice,
+      extraMilk: i.options.extraMilk,
+      qty: i.options.qty,
+      price: i.itemTotal
+    })),
+    total,
     pickupTime,
-    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-    displayTime: new Date().toLocaleString()
+    timestamp: firebase.firestore.FieldValue.serverTimestamp()
   };
 
   try {
-    console.log("正在嘗試寫入 Firebase...", orderData);
     await db.collection('orders').doc(orderId).set(orderData);
-    console.log("Firebase 寫入成功");
     
-    if (GAS_URL && GAS_URL !== 'YOUR_GAS_WEB_APP_URL') {
-      console.log("正在發送 LINE 通知...");
-      fetch(GAS_URL, { 
-        method: 'POST', 
-        mode: 'no-cors',
-        cache: 'no-cache',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'submitOrder', order: { ...orderData, timestamp: orderData.displayTime } }) 
-      }).then(() => console.log("LINE 通知已發送 (no-cors 模式)"));
-    }
-    
-    showOrderSuccess(orderId);
+    // 傳送到 GAS 發送 LINE
+    fetch(GAS_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(orderData)
+    });
+
+    alert('訂單已送出！請準時前往取餐。');
     cart = [];
     updateCartBadge();
-    renderCart(); // 💡 關鍵：立即重新渲染購物車介面，顯示「購物車是空的」
+    showPanel('orders');
   } catch (e) {
-    console.error("下單過程出錯:", e);
-    let errorMsg = '下單失敗，原因：' + (e.message || '未知錯誤');
-    if (e.message && e.message.includes('permission-denied')) {
-      errorMsg = '下單失敗：Firebase 資料庫權限不足，請檢查 Rules 設定。';
-    }
-    alert(errorMsg);
+    alert('下單失敗: ' + e.message);
   } finally {
-    btn.disabled = false;
-    btn.innerHTML = originalText;
+    submitBtn.disabled = false;
+    submitBtn.textContent = '確認送出訂單';
   }
 }
 
-function showOrderSuccess(orderId) {
-  document.getElementById('cart-checkout-area').style.display = 'none';
-  document.getElementById('order-success-area').style.display = 'block';
-  document.getElementById('order-success-area').innerHTML = `<div class="success-screen"><div class="success-icon">✅</div><h3>訂單已送出！</h3><p>請於預約時間前往自取</p><div class="order-number-display">訂單編號：${orderId}</div><button class="btn-primary" onclick="showPanel('orders')" style="margin-top:10px;">查看我的訂單</button></div>`;
-}
-
-async function renderOrders() {
+// ===== 訂單查詢 =====
+async function fetchOrders() {
   const container = document.getElementById('orders-container');
-  container.innerHTML = '<div style="text-align:center; padding:40px;"><span class="spinner" style="border-top-color:var(--tan);"></span> 載入中...</div>';
+  container.innerHTML = '<div class="loading-spinner"></div>';
   
   try {
     const today = new Date();
-    today.setHours(0,0,0,0);
+    today.setHours(0, 0, 0, 0);
+    
     const snapshot = await db.collection('orders')
       .where('phone', '==', currentPhone)
       .where('timestamp', '>=', today)
       .orderBy('timestamp', 'desc')
       .get();
 
+    container.innerHTML = '';
     if (snapshot.empty) {
-      container.innerHTML = '<div style="text-align:center; padding:40px; color:#999;">今日尚無紀錄</div>';
+      container.innerHTML = '<div class="empty-state">今天還沒有訂單紀錄喔！</div>';
       return;
     }
 
-    container.innerHTML = snapshot.docs.map(doc => {
-      const o = doc.data();
-      return `
-        <div class="order-card">
-          <div class="order-header"><span class="order-id">${o.orderId}</span><span class="order-time">${o.displayTime.split(' ')[1]}</span></div>
-          <div class="order-pickup">⏰ 預計取餐：${o.pickupTime}</div>
-          <div class="order-items">${o.items.map(i => `${i.name}${i.cup ? `(${i.cup})` : ''} x ${i.qty} ${i.ice ? i.ice : ''}${i.extraMilk ? '·鮮奶加量' : ''} $${i.itemTotal}`).join('<br/>')}</div>
-          <div class="order-total">總計：$${o.totalAmount}</div>
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      const div = document.createElement('div');
+      div.className = 'order-card';
+      div.innerHTML = `
+        <div class="order-header">
+          <span class="order-id">${data.orderId}</span>
+          <span class="order-time">取餐: ${data.pickupTime}</span>
         </div>
+        ${data.items.map(i => `
+          <div class="order-item">
+            <span>${i.name} x ${i.qty}</span>
+            <span>$${i.price}</span>
+          </div>
+        `).join('')}
+        <div class="order-total">總計 $${data.total}</div>
       `;
-    }).join('');
+      container.appendChild(div);
+    });
   } catch (e) {
-    container.innerHTML = '<div style="text-align:center; padding:40px; color:#e74c3c;">載入失敗，請稍後再試</div>';
+    container.innerHTML = '<div class="empty-state">查詢失敗，請稍後再試</div>';
     console.error(e);
   }
 }
 
+// ===== 頁面切換 =====
 function showPanel(panel) {
   document.getElementById('order-screen').style.display = panel === 'menu' ? 'block' : 'none';
   document.getElementById('cart-panel').style.display = panel === 'cart' ? 'block' : 'none';
   document.getElementById('orders-panel').style.display = panel === 'orders' ? 'block' : 'none';
+  
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('nav-' + panel).classList.add('active');
-  if (panel === 'cart') { document.getElementById('order-success-area').style.display = 'none'; renderCart(); }
-  if (panel === 'orders') renderOrders();
-}
-
-function showToast(msg) {
-  const toast = document.getElementById('toast'); toast.textContent = msg; toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 2500);
+  
+  if (panel === 'cart') renderCart();
+  if (panel === 'orders') fetchOrders();
+  window.scrollTo(0, 0);
 }
 </script>
 </body>

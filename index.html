@@ -739,7 +739,7 @@ const MENU = [
   { id: 106, name: '梅有芒果', price: 150, category: ['other','mg']}
 ];
 
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbxcpJHNgogEzn6O5AZ87Ii1xu1ffiMSce_W25-qXCj0ojSG_w6PJ01stQ96czSUdBLV/exec';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbw_LPJGmvNO01DRkWC4bgCi9wqfUqwZJjt-Oq8tPW2vP3yXoMqMropcet00cVtHEPys/exec';
 
 // ===== 狀態 =====
 let currentPhone = '';
@@ -1051,16 +1051,16 @@ async function submitOrder() {
   const orderData = {
     orderId,
     phone: currentPhone,
-    name: currentUserName,
+    userName: currentUserName, // 配合後端欄位名稱
     items: cart.map(i => ({
       name: i.name,
       cup: i.options.cup,
       ice: i.options.ice,
-      extraMilk: i.options.extraMilk,
+      extraMilk: i.options.extraMilk === '加量',
       qty: i.options.qty,
-      price: i.itemTotal
+      itemTotal: i.itemTotal // 配合後端計算合併數量
     })),
-    total,
+    totalAmount: total, // 配合後端欄位名稱
     pickupTime,
     timestamp: firebase.firestore.FieldValue.serverTimestamp()
   };
@@ -1068,12 +1068,18 @@ async function submitOrder() {
   try {
     await db.collection('orders').doc(orderId).set(orderData);
     
-    // 傳送到 GAS 發送 LINE
+    // 傳送到 GAS 發送 LINE (需封裝 action 與 order)
     fetch(GAS_URL, {
       method: 'POST',
       mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(orderData)
+      body: JSON.stringify({
+        action: 'submitOrder',
+        order: {
+          ...orderData,
+          timestamp: new Date().toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' }) // 轉換為可讀時間
+        }
+      })
     });
 
     alert('訂單已送出！請準時前往取餐。');
@@ -1121,10 +1127,10 @@ async function fetchOrders() {
         ${data.items.map(i => `
           <div class="order-item">
             <span>${i.name} x ${i.qty}</span>
-            <span>$${i.price}</span>
+            <span>$${i.itemTotal}</span>
           </div>
         `).join('')}
-        <div class="order-total">總計 $${data.total}</div>
+        <div class="order-total">總計 $${data.totalAmount}</div>
       `;
       container.appendChild(div);
     });
